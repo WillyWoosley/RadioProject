@@ -1,0 +1,19 @@
+<component name="libraryTable">
+  <library name="com.giavaneers.gui.elements.embedded">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/com.giavaneers.gui.elements.embedded.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/com.giavaneers.persistence.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/com.giavaneers.properties.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/com.giavaneers.properties.net.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/com.giavaneers.properties.scoop.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/com.giavaneers.util.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/com.giavaneers.util.logger.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/com.pumaj.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jna-3.2.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.15.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/vlcj-1.2.0-rc2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

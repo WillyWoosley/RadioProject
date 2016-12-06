@@ -6,6 +6,15 @@ import java.awt.*;
 /**
  * Created by wdwoo on 12/1/2016.
  */
+//NEEDED CHANGES/LIST OF PLACEHOLDERS
+//need to change text heights so they will change with the window size
+//
+//need to insert real logo, see how that works in regards to variable dependencies
+//
+//need to adjust app window so it fits regardless of what side the taskbar is on (series of if statements, seeing if
+//windowSize-taskbarSize==windowSize
+
+
 public class Hora {
 
     //sets up app to be used for all of Hora
@@ -15,17 +24,24 @@ public class Hora {
 
         //object which will allow you to get the screensize of whatever device program is running in
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int taskbarHeight = screenSize.height-GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 
         //sets up app
         myApp.setBackground(RGBtoHSB(240, 248, 255));
         myApp.setVisible(true);
         myApp.setLayout(null);
-        myApp.setWidth((int) screenSize.getWidth());
-        myApp.setHeight((int) screenSize.getHeight());
+        myApp.setWidth(screenSize.width);
+        myApp.setHeight(screenSize.height-taskbarHeight);
         myApp.setLocation(0, 0);
+
+        //adds quit button
+        quitButton();
 
         //runs openingScreen
         openingScreen();
+
+        //runs buildInterface(doesn't work yet)
+        buildInterface();
 
     }
 
@@ -36,7 +52,7 @@ public class Hora {
         RectButton enter = new RectButton();
 
         //variables
-        int logoWidth = 600, logoHeight = 400; //placeholder sizes until we get ratio fo actual logo to work with IMPORTANT TO CHANGE
+        int logoWidth = myApp.getWidth()/4, logoHeight = logoWidth * 2/3; //placeholder sizes until we get ratio fo actual logo to work with IMPORTANT TO CHANGE
         boolean listening = true;
         String logoPath = "/assets/images/placeholder.png";
 
@@ -44,6 +60,7 @@ public class Hora {
         logo.setSize(logoWidth, logoHeight);
         logo.setLocation(myApp.getWidth()/2-logo.getWidth()/2, myApp.getHeight()/2-logo.getHeight());
         logo.setImage(logoPath);
+        logo.setBackground(RGBtoHSB(240, 248, 255));
         myApp.add(logo);
 
         //sets up enter button with text, size, and location
@@ -56,9 +73,10 @@ public class Hora {
         //waits to execute when shape clicked; really hogs CPU for what it does, needs optimization
         while(listening) {
             if (enter.clickTracker==1) {
-                System.out.println("it worked");
                 enter.clickTracker=0;
                 listening = false;
+                myApp.remove(enter);
+                myApp.remove(logo);
             }
             PjUtils.sleep(1000);
         }
@@ -66,12 +84,6 @@ public class Hora {
     }
 
     public static void buildInterface() {
-
-        //sets colors
-        float[] backgroundRGB = new float[3];
-        Color.RGBtoHSB(240, 248, 255, backgroundRGB);
-        //myApp.setBackground(Color.getHSBColor(backgroundRGB[0], backgroundRGB[1], backgroundRGB[2]));
-        myApp.setBackground(RGBtoHSB(240, 248, 255));
 
         //places logo
         String logoPath = "/assets/images/placeholder.png";
@@ -81,18 +93,25 @@ public class Hora {
         logo.setImage(logoPath);
         myApp.add(logo);
 
-        //adds buttons
-        RectButton emotion = new RectButton();
-        emotion.setText("emotion");
-        emotion.setFontSize(40);
-        emotion.setSize(500, 200);
-        myApp.add(emotion).setLocation(500, 500);
-
-
-    }
-
-    public static void test() {
-
+        //creates array of buttons
+        RectButton[] buttons = new RectButton[4];
+        for (int i=0; i<4; i++) {
+            buttons[i] = new RectButton();
+            myApp.add(buttons[i]);
+            if (i==0) {
+                buttons[i].setLocation(20, 20);
+                buttons[i].setText("Emotion");
+            }
+            if (i==1) {
+                buttons[i].setLocation(200, 213);
+            }
+            if (i==2) {
+                buttons[i].setLocation(900, 900);
+            }
+            if (i==3) {
+                buttons[i].setLocation(324, 213);
+            }
+        }
     }
 
     //streamlined way to take RGB colors and make them HSB
@@ -138,6 +157,16 @@ public class Hora {
         myApp.add(right);
         myApp.add(centerBorder);
 
+    }
+
+    //creates quit button
+    public static void quitButton() {
+        RectButton quit = new RectButton();
+        quit.setText("Quit");
+        quit.setFontSize(30);
+        quit.setFontColor(Color.white);
+        quit.setSize(myApp.getWidth()/20, myApp.getHeight()/25);
+        myApp.add(quit).setLocation(myApp.getWidth()-quit.getWidth()-quit.getWidth()/4, myApp.getHeight()-quit.getHeight()-quit.getHeight()/4);
     }
 
 }

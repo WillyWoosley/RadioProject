@@ -1,6 +1,5 @@
 import com.pumaj.PjIRectangle;
 import com.pumaj.PjRectangle;
-import com.pumaj.PjUtils;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -17,7 +16,7 @@ public class RectButton extends PjRectangle implements PjIRectangle {
     public void initialize() {
         super.initialize();
         setOpaque(true);
-        setBackground(Color.red);
+        setBackground(RGBtoHSB(135,206,235));
     }
 
     public void mouseClicked(MouseEvent e) {
@@ -26,11 +25,18 @@ public class RectButton extends PjRectangle implements PjIRectangle {
     }
 
     public void mouseEntered(MouseEvent e) {
-        setBackground(Color.green);
+        setBackground(RGBtoHSB(0,191,255));
     }
 
     public void mouseExited(MouseEvent e) {
-        setBackground(Color.red);
+        setBackground(RGBtoHSB(135,206,235));
+    }
+
+    public static Color RGBtoHSB(int r, int g, int b) {
+        float[] HSB = new float[3];
+        Color.RGBtoHSB(r, g, b, HSB);
+        Color returned = Color.getHSBColor(HSB[0], HSB[1], HSB[2]);
+        return returned;
     }
 
 }

@@ -1,5 +1,6 @@
 import com.pumaj.*;
 import org.w3c.dom.css.Rect;
+import org.w3c.dom.events.MouseEvent;
 
 import java.awt.*;
 
@@ -13,12 +14,21 @@ import java.awt.*;
 //
 //need to adjust app window so it fits regardless of what side the taskbar is on (series of if statements, seeing if
 //windowSize-taskbarSize==windowSize
+//
+//get images to put on buttons
+//
+//better colors for everything
+//
+//replace square buttons with something more visually appealing
 
 
 public class Hora {
 
     //sets up app to be used for all of Hora
     protected static PjApplication myApp = new PjApplication();
+    protected static int buttonPressed;
+    protected static final int logoWidth = myApp.getWidth()/2, logoHeight = logoWidth * 2/3; //placeholder sizes until we get ratio fo actual logo to work with IMPORTANT TO CHANGE
+
 
     public static void main(String[] args) {
 
@@ -37,12 +47,35 @@ public class Hora {
         //adds quit button
         quitButton();
 
-        //runs openingScreen
-        openingScreen();
+        //generates opening screen
+        //openingScreen();
 
-        //runs buildInterface(doesn't work yet)
-        buildInterface();
+        //generates category selection screen
+        //buildCategory();
 
+        //buildEmotion();
+        buildSituation();
+        /*
+        if (buttonPressed==0) {
+            //insert emotion
+            System.out.println("0");
+        }
+
+        else if (buttonPressed==1) {
+            //insert situation
+            System.out.println("1");
+        }
+
+        else if (buttonPressed==2) {
+            //insert genre
+            System.out.println("2");
+        }
+
+        else {
+            //insert favorites
+            System.out.println("3");
+        }
+        */
     }
 
     public static void openingScreen() {
@@ -52,7 +85,6 @@ public class Hora {
         RectButton enter = new RectButton();
 
         //variables
-        int logoWidth = myApp.getWidth()/4, logoHeight = logoWidth * 2/3; //placeholder sizes until we get ratio fo actual logo to work with IMPORTANT TO CHANGE
         boolean listening = true;
         String logoPath = "/assets/images/placeholder.png";
 
@@ -60,7 +92,7 @@ public class Hora {
         logo.setSize(logoWidth, logoHeight);
         logo.setLocation(myApp.getWidth()/2-logo.getWidth()/2, myApp.getHeight()/2-logo.getHeight());
         logo.setImage(logoPath);
-        logo.setBackground(RGBtoHSB(240, 248, 255));
+        logo.setBackground(Color.yellow);
         myApp.add(logo);
 
         //sets up enter button with text, size, and location
@@ -78,39 +110,190 @@ public class Hora {
                 myApp.remove(enter);
                 myApp.remove(logo);
             }
-            PjUtils.sleep(1000);
+            PjUtils.sleep(500);
         }
 
     }
 
-    public static void buildInterface() {
+    public static void buildCategory() {
+
+        //variable creation
+        String logoPath = "assets/images/placeholder.png";
+        PjRectangle logo = new PjRectangle();
+        RectButton[] buttons = new RectButton[4];
+        boolean listening = true;
 
         //places logo
-        String logoPath = "/assets/images/placeholder.png";
-        RectButton logo = new RectButton();
-        logo.setSize(600, 400);
-        logo.setLocation(myApp.getWidth()/2-logo.getWidth()/2, 25);
+        logo.setSize(logoWidth, logoHeight);
+        logo.setLocation(myApp.getWidth()/2-logo.getWidth()/2, myApp.getHeight()/20);
+        logo.setBackground(Color.yellow);
         logo.setImage(logoPath);
         myApp.add(logo);
 
-        //creates array of buttons
-        RectButton[] buttons = new RectButton[4];
+        //fills array of buttons
         for (int i=0; i<4; i++) {
             buttons[i] = new RectButton();
+            buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/4);
+            buttons[i].setFontSize(32);
+            buttons[i].setFontColor(Color.white);
             myApp.add(buttons[i]);
             if (i==0) {
-                buttons[i].setLocation(20, 20);
+                buttons[i].setLocation(logo.getX()+logo.getWidth()/16, logo.getY()+logo.getHeight()+buttons[i].getHeight()/2);
                 buttons[i].setText("Emotion");
             }
-            if (i==1) {
-                buttons[i].setLocation(200, 213);
+            else if (i==1) {
+                buttons[i].setLocation(logo.getX()+logo.getWidth()/16, buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/2);
+                buttons[i].setText("Situation");
             }
-            if (i==2) {
-                buttons[i].setLocation(900, 900);
+            else if (i==2) {
+                buttons[i].setLocation(logo.getX()+logo.getWidth()/16, buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/2);
+                buttons[i].setText("Genre");
             }
-            if (i==3) {
-                buttons[i].setLocation(324, 213);
+            else {
+                buttons[i].setLocation(logo.getX()+logo.getWidth()/16, buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/2);
+                buttons[i].setText("Favorites");
             }
+        }
+
+        //doesn't work yet, can also be made more efficient
+        while (listening) {
+            for (int i=0; i<4; i++) {
+                if (buttons[i].clickTracker==1) {
+                    buttonPressed=i;
+                    listening=false;
+                }
+            }
+            PjUtils.sleep(500);
+        }
+    }
+
+    public static void buildEmotion() {
+        //variable creation
+        PjRectangle emotionText = new PjRectangle();
+        RectButton[] buttons = new RectButton[6];
+        String[] emotions = {"Happy", "Sad", "Angry", "Relaxed", "Excited", "Tired"};
+
+        //places logo
+        emotionText.setText("Emotions:");
+        emotionText.setFontSize(160);
+        emotionText.setFontColor(Color.blue);
+        emotionText.setSize(logoWidth, logoHeight/2);
+        emotionText.setLocation(myApp.getWidth()/2-emotionText.getWidth()/2, myApp.getHeight()/20);
+        emotionText.setBackground(myApp.getBackground());
+        myApp.add(emotionText);
+
+        for (int i=0; i<6; i++) {
+            buttons[i] = new RectButton();
+            buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/2);
+            buttons[i].setText(emotions[i]);
+            buttons[i].setFontSize(60);
+            buttons[i].setFontColor(Color.white);
+            myApp.add(buttons[i]);
+
+            if (i<=2) {
+                if (i==0) {
+                    buttons[i].setLocation(myApp.getWidth()/2-buttons[i].getWidth()-buttons[i].getWidth()/8, myApp.getHeight()/4);
+                }
+                else {
+                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/4);
+                }
+            }
+            else {
+                if (i==3) {
+                    buttons[i].setLocation(myApp.getWidth()/2+buttons[i].getWidth()/8, myApp.getHeight()/4);
+                }
+                else {
+                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/4);
+                }
+            }
+
+        }
+    }
+
+    public static void buildSituation() {
+        //variable creation
+        PjRectangle situationText = new PjRectangle();
+        RectButton[] buttons = new RectButton[6];
+        String[] situations = {"Party", "Roadtrip", "Gym", "Date", "Stargazing", "Beach"};
+
+        //places logo
+        situationText.setText("Situations:");
+        situationText.setFontSize(160);
+        situationText.setFontColor(Color.blue);
+        situationText.setSize(logoWidth, logoHeight/2);
+        situationText.setLocation(myApp.getWidth()/2-situationText.getWidth()/2, myApp.getHeight()/20);
+        situationText.setBackground(myApp.getBackground());
+        myApp.add(situationText);
+
+        for (int i=0; i<6; i++) {
+            buttons[i] = new RectButton();
+            buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/2);
+            buttons[i].setText(situations[i]);
+            buttons[i].setFontSize(60);
+            buttons[i].setFontColor(Color.white);
+            myApp.add(buttons[i]);
+
+            if (i<=2) {
+                if (i==0) {
+                    buttons[i].setLocation(myApp.getWidth()/2-buttons[i].getWidth()-buttons[i].getWidth()/8, myApp.getHeight()/4);
+                }
+                else {
+                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/4);
+                }
+            }
+            else {
+                if (i==3) {
+                    buttons[i].setLocation(myApp.getWidth()/2+buttons[i].getWidth()/8, myApp.getHeight()/4);
+                }
+                else {
+                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/4);
+                }
+            }
+
+        }
+    }
+
+    //still needs editing so it works for genre
+    public static void buildGenre() {
+        //variable creation
+        PjRectangle genreText = new PjRectangle();
+        RectButton[] buttons = new RectButton[6];
+        String[] genres = {"Party", "Roadtrip", "Gym", "Date", "Stargazing", "Beach"};
+
+        //places logo
+        genreText.setText("Situations:");
+        genreText.setFontSize(160);
+        genreText.setFontColor(Color.blue);
+        genreText.setSize(logoWidth, logoHeight/2);
+        genreText.setLocation(myApp.getWidth()/2-genreText.getWidth()/2, myApp.getHeight()/20);
+        genreText.setBackground(myApp.getBackground());
+        myApp.add(genreText);
+
+        for (int i=0; i<6; i++) {
+            buttons[i] = new RectButton();
+            buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/2);
+            buttons[i].setText(genres[i]);
+            buttons[i].setFontSize(60);
+            buttons[i].setFontColor(Color.white);
+            myApp.add(buttons[i]);
+
+            if (i<=2) {
+                if (i==0) {
+                    buttons[i].setLocation(myApp.getWidth()/2-buttons[i].getWidth()-buttons[i].getWidth()/8, myApp.getHeight()/4);
+                }
+                else {
+                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/4);
+                }
+            }
+            else {
+                if (i==3) {
+                    buttons[i].setLocation(myApp.getWidth()/2+buttons[i].getWidth()/8, myApp.getHeight()/4);
+                }
+                else {
+                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/4);
+                }
+            }
+
         }
     }
 
@@ -161,12 +344,17 @@ public class Hora {
 
     //creates quit button
     public static void quitButton() {
-        RectButton quit = new RectButton();
+
+        //object creation
+        QuitButton quit = new QuitButton();
+
+        //sets up and places quit button
         quit.setText("Quit");
         quit.setFontSize(30);
         quit.setFontColor(Color.white);
         quit.setSize(myApp.getWidth()/20, myApp.getHeight()/25);
         myApp.add(quit).setLocation(myApp.getWidth()-quit.getWidth()-quit.getWidth()/4, myApp.getHeight()-quit.getHeight()-quit.getHeight()/4);
+
     }
 
 }

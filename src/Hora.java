@@ -48,34 +48,31 @@ public class Hora {
         quitButton();
 
         //generates opening screen
-        //openingScreen();
+        openingScreen();
 
         //generates category selection screen
-        //buildCategory();
+        buildCategory();
 
-        //buildEmotion();
-        buildSituation();
-        /*
+
+
         if (buttonPressed==0) {
-            //insert emotion
-            System.out.println("0");
+            buildEmotion();
         }
 
         else if (buttonPressed==1) {
-            //insert situation
-            System.out.println("1");
+            buildSituation();
         }
 
         else if (buttonPressed==2) {
-            //insert genre
-            System.out.println("2");
+            buildGenre();
         }
 
         else {
             //insert favorites
+            //
+            //placeholder to confirm button is working
             System.out.println("3");
         }
-        */
     }
 
     public static void openingScreen() {
@@ -160,6 +157,11 @@ public class Hora {
             for (int i=0; i<4; i++) {
                 if (buttons[i].clickTracker==1) {
                     buttonPressed=i;
+                    //clears app
+                    for (int j=0; j<4; j++) {
+                        myApp.remove(buttons[j]);
+                    }
+                    myApp.remove(logo);
                     listening=false;
                 }
             }
@@ -172,8 +174,9 @@ public class Hora {
         PjRectangle emotionText = new PjRectangle();
         RectButton[] buttons = new RectButton[6];
         String[] emotions = {"Happy", "Sad", "Angry", "Relaxed", "Excited", "Tired"};
+        boolean listening = true;
 
-        //places logo
+        //places text
         emotionText.setText("Emotions:");
         emotionText.setFontSize(160);
         emotionText.setFontColor(Color.blue);
@@ -182,7 +185,9 @@ public class Hora {
         emotionText.setBackground(myApp.getBackground());
         myApp.add(emotionText);
 
+        //adds buttons
         for (int i=0; i<6; i++) {
+            //creates generic button and sets text
             buttons[i] = new RectButton();
             buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/2);
             buttons[i].setText(emotions[i]);
@@ -190,6 +195,7 @@ public class Hora {
             buttons[i].setFontColor(Color.white);
             myApp.add(buttons[i]);
 
+            //sets button location based upon i value
             if (i<=2) {
                 if (i==0) {
                     buttons[i].setLocation(myApp.getWidth()/2-buttons[i].getWidth()-buttons[i].getWidth()/8, myApp.getHeight()/4);
@@ -207,6 +213,22 @@ public class Hora {
                 }
             }
 
+        }
+
+        //listens to see which button has been pressed
+        while (listening) {
+            for (int i=0; i<6; i++) {
+                if (buttons[i].clickTracker==1) {
+                    //doesn't do anything yet
+                    buttonPressed=i;
+                    //clears app
+                    for (int j=0; j<6; j++) {
+                        myApp.remove(buttons[j]);
+                    }
+                    myApp.remove(emotionText);
+                    listening=false;
+                }
+            }
         }
     }
 
@@ -215,8 +237,9 @@ public class Hora {
         PjRectangle situationText = new PjRectangle();
         RectButton[] buttons = new RectButton[6];
         String[] situations = {"Party", "Roadtrip", "Gym", "Date", "Stargazing", "Beach"};
+        boolean listening = true;
 
-        //places logo
+        //places text
         situationText.setText("Situations:");
         situationText.setFontSize(160);
         situationText.setFontColor(Color.blue);
@@ -225,7 +248,9 @@ public class Hora {
         situationText.setBackground(myApp.getBackground());
         myApp.add(situationText);
 
+        //adds buttons
         for (int i=0; i<6; i++) {
+            //creates generic button and sets text
             buttons[i] = new RectButton();
             buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/2);
             buttons[i].setText(situations[i]);
@@ -233,6 +258,7 @@ public class Hora {
             buttons[i].setFontColor(Color.white);
             myApp.add(buttons[i]);
 
+            //sets button location based upon i value
             if (i<=2) {
                 if (i==0) {
                     buttons[i].setLocation(myApp.getWidth()/2-buttons[i].getWidth()-buttons[i].getWidth()/8, myApp.getHeight()/4);
@@ -249,7 +275,22 @@ public class Hora {
                     buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/4);
                 }
             }
+        }
 
+        //listens to see which button has been pressed
+        while (listening) {
+            for (int i=0; i<6; i++) {
+                if (buttons[i].clickTracker==1) {
+                    //doesn't do anything yet
+                    buttonPressed=i;
+                    //clears app
+                    for (int j=0; j<6; j++) {
+                        myApp.remove(buttons[j]);
+                    }
+                    myApp.remove(situationText);
+                    listening=false;
+                }
+            }
         }
     }
 
@@ -257,11 +298,12 @@ public class Hora {
     public static void buildGenre() {
         //variable creation
         PjRectangle genreText = new PjRectangle();
-        RectButton[] buttons = new RectButton[6];
-        String[] genres = {"Party", "Roadtrip", "Gym", "Date", "Stargazing", "Beach"};
+        RectButton[] buttons = new RectButton[12];
+        boolean listening = true;
+        String[] genres = {"Latin", "Rock", "Classical", "Reggae", "Holiday", "Electronic", "Jazz", "Country", "Pop", "Hip Hop", "Folk", "Metal"};
 
-        //places logo
-        genreText.setText("Situations:");
+        //places text
+        genreText.setText("Genres:");
         genreText.setFontSize(160);
         genreText.setFontColor(Color.blue);
         genreText.setSize(logoWidth, logoHeight/2);
@@ -269,7 +311,10 @@ public class Hora {
         genreText.setBackground(myApp.getBackground());
         myApp.add(genreText);
 
-        for (int i=0; i<6; i++) {
+        //adds genre buttons
+        for (int i=0; i<12; i++) {
+
+            //adds on generic button and adds text
             buttons[i] = new RectButton();
             buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/2);
             buttons[i].setText(genres[i]);
@@ -277,23 +322,47 @@ public class Hora {
             buttons[i].setFontColor(Color.white);
             myApp.add(buttons[i]);
 
-            if (i<=2) {
+            //sets button location based upon i value
+            if (i<=3) {
                 if (i==0) {
-                    buttons[i].setLocation(myApp.getWidth()/2-buttons[i].getWidth()-buttons[i].getWidth()/8, myApp.getHeight()/4);
+                    buttons[i].setLocation(myApp.getWidth()/3-buttons[i].getWidth(), myApp.getHeight()/4);
                 }
                 else {
-                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/4);
+                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i].getHeight()+buttons[i].getHeight()/8);
                 }
+            }
+            else if (i>3 && i<=7) {
+               if (i==4) {
+                    buttons[i].setLocation(buttons[0].getX()+buttons[i].getWidth()+buttons[i].getWidth()/8, buttons[0].getY());
+               }
+               else {
+                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i].getHeight()+buttons[i].getHeight()/8);
+               }
             }
             else {
-                if (i==3) {
-                    buttons[i].setLocation(myApp.getWidth()/2+buttons[i].getWidth()/8, myApp.getHeight()/4);
+                if (i==8) {
+                    buttons[i].setLocation(buttons[4].getX()+buttons[i].getWidth()+buttons[i].getWidth()/8, buttons[4].getY());
                 }
                 else {
-                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/4);
+                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i].getHeight()+buttons[i].getHeight()/8);
                 }
             }
+        }
 
+        //listens to see which button has been pressed
+        while (listening) {
+            for (int i=0; i<12; i++) {
+                if (buttons[i].clickTracker==1) {
+                    //doesn't do anything yet
+                    buttonPressed=i;
+                    //clears app
+                    for (int j=0; j<12; j++) {
+                        myApp.remove(buttons[j]);
+                    }
+                    myApp.remove(genreText);
+                    listening=false;
+                }
+            }
         }
     }
 

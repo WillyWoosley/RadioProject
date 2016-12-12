@@ -90,7 +90,7 @@ public class Hora {
 
         //variables
         boolean listening = true;
-        String logoPath = "/Users/Christoph/Desktop/RadioProjec/Assets/Images/Hora.png";
+        String logoPath = "Assets/Images/Hora.png";
 
         //sets up logo with image, size, and location
         logo.setSize(logoWidth, logoHeight);
@@ -111,7 +111,7 @@ public class Hora {
         myApp.add(enter).setLocation(logo.getX()+logoWidth/20, logo.getY()+logoHeight+logoHeight/6);
 
         //plays intro sound file
-        PjUtils.playSoundFile("/Users/Christoph/Desktop/RadioProjec/Assets/Sounds/Intro_Sound.wav");
+        PjUtils.playSoundFile("Assets/Sounds/Intro_Sound.wav");
 
         //waits to execute when shape clicked; really hogs CPU for what it does, needs optimization
         while(listening) {
@@ -129,7 +129,7 @@ public class Hora {
     public static void buildCategory() {
 
         //variable creation
-        String logoPath = "/Users/Christoph/Desktop/RadioProjec/Assets/Images/Hora.png";
+        String logoPath = "Assets/Images/Hora.png";
         PjRectangle logo = new PjRectangle();
         RectButton[] buttons = new RectButton[4];
         boolean listening = true;
@@ -189,7 +189,7 @@ public class Hora {
     public static void buildEmotion() {
         //variable creation
         PjRectangle miniLogo = new PjRectangle();
-        String miniLogoPath = "/Users/Christoph/Desktop/RadioProjec/Assets/Images/horalogo.png";
+        String miniLogoPath = "Assets/Images/horalogo.png";
         PjRectangle emotionText = new PjRectangle();
         RectButton[] buttons = new RectButton[6];
         String[] emotions = {"Happy", "Sad", "Angry", "Relaxed", "Excited", "Tired"};
@@ -267,7 +267,7 @@ public class Hora {
     public static void buildSituation() {
         //variable creation
         PjRectangle miniLogo = new PjRectangle();
-        String miniLogoPath = "/Users/Christoph/Desktop/RadioProjec/Assets/Images/horalogo.png";
+        String miniLogoPath = "Assets/Images/horalogo.png";
         PjRectangle situationText = new PjRectangle();
         RectButton[] buttons = new RectButton[6];
         String[] situations = {"Party", "Roadtrip", "Gym", "Date", "Stargazing", "Beach"};
@@ -343,7 +343,7 @@ public class Hora {
     public static void buildGenre() {
         //variable creation
         PjRectangle miniLogo = new PjRectangle();
-        String miniLogoPath = "/Users/Christoph/Desktop/RadioProjec/Assets/Images/horalogo.png";
+        String miniLogoPath = "Assets/Images/horalogo.png";
         PjRectangle genreText = new PjRectangle();
         RectButton[] buttons = new RectButton[12];
         boolean listening = true;

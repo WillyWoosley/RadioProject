@@ -49,6 +49,17 @@ public class Hora {
         myApp.setHeight(screenSize.height-taskbarHeight);
         myApp.setLocation(0, 0);
 
+        //placeholder for testing
+        try {
+            PjInternetRadio myRadio = new PjInternetRadio();
+            GvIMediaPlayer player = myRadio.getMediaPlayer();
+            player.setURI("http://stream1.evasionfm.com/Chante_France");
+        }
+
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
         //adds back button
         backButton();
 
@@ -90,7 +101,7 @@ public class Hora {
 
         //variables
         boolean listening = true;
-        String logoPath = "/Users/Christoph/Desktop/RadioProjec/Assets/Images/Hora.png";
+        String logoPath = "Assets/Images/Hora.png";
 
         //sets up logo with image, size, and location
         logo.setSize(logoWidth, logoHeight);

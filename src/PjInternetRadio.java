@@ -141,9 +141,8 @@ public static void main(
 
       String[] mediaPaths =
       {
-         "http://66.225.205.169/ss3.mp3.56"
-         //"http://streams.kqed.org/kqedradio",//kqed
-         //"http://stream1.evasionfm.com/Chante_France",//chante-france
+         "http://streams.kqed.org/kqedradio",//kqed
+         "http://stream1.evasionfm.com/Chante_France",//chante-france
       };
 
       if (true)

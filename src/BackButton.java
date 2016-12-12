@@ -1,10 +1,10 @@
 import java.awt.event.MouseEvent;
 
 /**
- * Created by wdwoo on 12/8/2016.
+ * Created by Christoph on 12/11/16.
  */
-public class QuitButton extends RectButton {
-    public QuitButton() {
+public class BackButton extends RectButton {
+    public BackButton() {
         super();
     }
 
@@ -15,7 +15,8 @@ public class QuitButton extends RectButton {
     }
 
     public void mouseClicked(MouseEvent e) {
-        System.exit(1);
+        System.out.println("back");
+        //we need to add what it does here
     }
 
     public void mouseEntered(MouseEvent e) {
@@ -25,5 +26,8 @@ public class QuitButton extends RectButton {
     public void mouseExited(MouseEvent e) {
         setBackground(RGBtoHSB(230, 0, 230));
     }
-
 }
+
+
+
+

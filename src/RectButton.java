@@ -16,7 +16,7 @@ public class RectButton extends PjRectangle implements PjIRectangle {
     public void initialize() {
         super.initialize();
         setOpaque(true);
-        setBackground(RGBtoHSB(135,206,235));
+        setBackground(RGBtoHSB(255,0,128));
     }
 
     public void mouseClicked(MouseEvent e) {
@@ -25,11 +25,11 @@ public class RectButton extends PjRectangle implements PjIRectangle {
     }
 
     public void mouseEntered(MouseEvent e) {
-        setBackground(RGBtoHSB(0,191,255));
+        setBackground(RGBtoHSB(179,0,90));
     }
 
     public void mouseExited(MouseEvent e) {
-        setBackground(RGBtoHSB(135,206,235));
+        setBackground(RGBtoHSB(255,0,128));
     }
 
     public static Color RGBtoHSB(int r, int g, int b) {

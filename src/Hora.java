@@ -1,7 +1,11 @@
 import com.pumaj.*;
 import org.w3c.dom.css.Rect;
 import org.w3c.dom.events.MouseEvent;
-
+import com.giavaneers.gui.elements.embedded.GvIMediaPlayer;
+import com.giavaneers.gui.elements.embedded.GvVLCMediaPlayer;
+import javax.swing.*;
+import java.io.*;
+import javax.imageio.*;
 import java.awt.*;
 
 /**
@@ -27,7 +31,8 @@ public class Hora {
     //sets up app to be used for all of Hora
     protected static PjApplication myApp = new PjApplication();
     protected static int buttonPressed;
-    protected static final int logoWidth = myApp.getWidth()/2, logoHeight = logoWidth * 2/3; //placeholder sizes until we get ratio fo actual logo to work with IMPORTANT TO CHANGE
+    protected static final int logoWidth = 588, logoHeight = 238;
+    protected static final int miniLogoWidth = 70, miniLogoHeight = 100;
 
 
     public static void main(String[] args) {
@@ -37,12 +42,15 @@ public class Hora {
         int taskbarHeight = screenSize.height-GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 
         //sets up app
-        myApp.setBackground(RGBtoHSB(240, 248, 255));
+        myApp.setBackground(RGBtoHSB(1,1,20));
         myApp.setVisible(true);
         myApp.setLayout(null);
         myApp.setWidth(screenSize.width);
         myApp.setHeight(screenSize.height-taskbarHeight);
         myApp.setLocation(0, 0);
+
+        //adds back button
+        backButton();
 
         //adds quit button
         quitButton();
@@ -52,7 +60,6 @@ public class Hora {
 
         //generates category selection screen
         buildCategory();
-
 
 
         if (buttonPressed==0) {
@@ -83,7 +90,7 @@ public class Hora {
 
         //variables
         boolean listening = true;
-        String logoPath = "/assets/images/placeholder.png";
+        String logoPath = "/Users/Christoph/Desktop/RadioProjec/Assets/Images/Hora.png";
 
         //sets up logo with image, size, and location
         logo.setSize(logoWidth, logoHeight);
@@ -92,12 +99,19 @@ public class Hora {
         logo.setBackground(Color.yellow);
         myApp.add(logo);
 
+        //creates font
+        Font c = new Font("Orkney", Font.PLAIN, 18);
+
         //sets up enter button with text, size, and location
         enter.setSize(logoWidth-logoWidth/10, logoHeight/5);
-        enter.setText("Click here to begin...");
-        enter.setFontSize(32);
-        enter.setFontColor(Color.white);
+        enter.setText("Listening Has Never Been Easier");
+        enter.setFont(c);
+        enter.setFontSize(28);
+        enter.setFontColor(Color.black);
         myApp.add(enter).setLocation(logo.getX()+logoWidth/20, logo.getY()+logoHeight+logoHeight/6);
+
+        //plays intro sound file
+        PjUtils.playSoundFile("/Users/Christoph/Desktop/RadioProjec/Assets/Sounds/Intro_Sound.wav");
 
         //waits to execute when shape clicked; really hogs CPU for what it does, needs optimization
         while(listening) {
@@ -115,10 +129,13 @@ public class Hora {
     public static void buildCategory() {
 
         //variable creation
-        String logoPath = "assets/images/placeholder.png";
+        String logoPath = "/Users/Christoph/Desktop/RadioProjec/Assets/Images/Hora.png";
         PjRectangle logo = new PjRectangle();
         RectButton[] buttons = new RectButton[4];
         boolean listening = true;
+
+        //creates font
+        Font c = new Font("Orkney", Font.PLAIN, 18);
 
         //places logo
         logo.setSize(logoWidth, logoHeight);
@@ -131,8 +148,8 @@ public class Hora {
         for (int i=0; i<4; i++) {
             buttons[i] = new RectButton();
             buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/4);
-            buttons[i].setFontSize(32);
-            buttons[i].setFontColor(Color.white);
+            buttons[i].setFont(c);
+            buttons[i].setFontColor(Color.black);
             myApp.add(buttons[i]);
             if (i==0) {
                 buttons[i].setLocation(logo.getX()+logo.getWidth()/16, logo.getY()+logo.getHeight()+buttons[i].getHeight()/2);
@@ -171,19 +188,34 @@ public class Hora {
 
     public static void buildEmotion() {
         //variable creation
+        PjRectangle miniLogo = new PjRectangle();
+        String miniLogoPath = "/Users/Christoph/Desktop/RadioProjec/Assets/Images/horalogo.png";
         PjRectangle emotionText = new PjRectangle();
         RectButton[] buttons = new RectButton[6];
         String[] emotions = {"Happy", "Sad", "Angry", "Relaxed", "Excited", "Tired"};
         boolean listening = true;
 
+        //creates font
+        Font c = new Font("Orkney", Font.PLAIN, 100);
+        Font d = new Font("Orkney", Font.PLAIN, 25);
+
         //places text
         emotionText.setText("Emotions:");
-        emotionText.setFontSize(160);
-        emotionText.setFontColor(Color.blue);
+        emotionText.setFontColor(Color.white);
+        emotionText.setFont(c);
         emotionText.setSize(logoWidth, logoHeight/2);
         emotionText.setLocation(myApp.getWidth()/2-emotionText.getWidth()/2, myApp.getHeight()/20);
         emotionText.setBackground(myApp.getBackground());
         myApp.add(emotionText);
+
+
+        //adds minilogo to upper left
+        miniLogo.setSize(miniLogoWidth, miniLogoHeight);
+        miniLogo.setLocation(0,0);
+        miniLogo.setBackground(Color.yellow);
+        miniLogo.setImage(miniLogoPath);
+        myApp.add(miniLogo);
+
 
         //adds buttons
         for (int i=0; i<6; i++) {
@@ -191,8 +223,8 @@ public class Hora {
             buttons[i] = new RectButton();
             buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/2);
             buttons[i].setText(emotions[i]);
-            buttons[i].setFontSize(60);
-            buttons[i].setFontColor(Color.white);
+            buttons[i].setFont(d);
+            buttons[i].setFontColor(Color.black);
             myApp.add(buttons[i]);
 
             //sets button location based upon i value
@@ -234,19 +266,32 @@ public class Hora {
 
     public static void buildSituation() {
         //variable creation
+        PjRectangle miniLogo = new PjRectangle();
+        String miniLogoPath = "/Users/Christoph/Desktop/RadioProjec/Assets/Images/horalogo.png";
         PjRectangle situationText = new PjRectangle();
         RectButton[] buttons = new RectButton[6];
         String[] situations = {"Party", "Roadtrip", "Gym", "Date", "Stargazing", "Beach"};
         boolean listening = true;
 
+        //creates font
+        Font c = new Font("Orkney", Font.PLAIN, 100);
+        Font d = new Font("Orkney", Font.PLAIN, 25);
+
         //places text
         situationText.setText("Situations:");
-        situationText.setFontSize(160);
-        situationText.setFontColor(Color.blue);
+        situationText.setFontColor(Color.white);
+        situationText.setFont(c);
         situationText.setSize(logoWidth, logoHeight/2);
         situationText.setLocation(myApp.getWidth()/2-situationText.getWidth()/2, myApp.getHeight()/20);
         situationText.setBackground(myApp.getBackground());
         myApp.add(situationText);
+
+        //adds minilogo to upper left
+        miniLogo.setSize(miniLogoWidth, miniLogoHeight);
+        miniLogo.setLocation(0,0);
+        miniLogo.setBackground(Color.yellow);
+        miniLogo.setImage(miniLogoPath);
+        myApp.add(miniLogo);
 
         //adds buttons
         for (int i=0; i<6; i++) {
@@ -254,8 +299,8 @@ public class Hora {
             buttons[i] = new RectButton();
             buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/2);
             buttons[i].setText(situations[i]);
-            buttons[i].setFontSize(60);
-            buttons[i].setFontColor(Color.white);
+            buttons[i].setFont(d);
+            buttons[i].setFontColor(Color.black);
             myApp.add(buttons[i]);
 
             //sets button location based upon i value
@@ -297,29 +342,43 @@ public class Hora {
     //still needs editing so it works for genre
     public static void buildGenre() {
         //variable creation
+        PjRectangle miniLogo = new PjRectangle();
+        String miniLogoPath = "/Users/Christoph/Desktop/RadioProjec/Assets/Images/horalogo.png";
         PjRectangle genreText = new PjRectangle();
         RectButton[] buttons = new RectButton[12];
         boolean listening = true;
         String[] genres = {"Latin", "Rock", "Classical", "Reggae", "Holiday", "Electronic", "Jazz", "Country", "Pop", "Hip Hop", "Folk", "Metal"};
 
+        //creates font
+        Font c = new Font("Orkney", Font.PLAIN, 100);
+        Font d = new Font("Orkney", Font.PLAIN, 25);
+
         //places text
         genreText.setText("Genres:");
-        genreText.setFontSize(160);
-        genreText.setFontColor(Color.blue);
+        genreText.setFontColor(Color.white);
+        genreText.setFont(c);
         genreText.setSize(logoWidth, logoHeight/2);
         genreText.setLocation(myApp.getWidth()/2-genreText.getWidth()/2, myApp.getHeight()/20);
         genreText.setBackground(myApp.getBackground());
         myApp.add(genreText);
 
+        //adds minilogo to upper left
+        miniLogo.setSize(miniLogoWidth, miniLogoHeight);
+        miniLogo.setLocation(0,0);
+        miniLogo.setBackground(Color.yellow);
+        miniLogo.setImage(miniLogoPath);
+        myApp.add(miniLogo);
+
         //adds genre buttons
         for (int i=0; i<12; i++) {
+
 
             //adds on generic button and adds text
             buttons[i] = new RectButton();
             buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/2);
             buttons[i].setText(genres[i]);
-            buttons[i].setFontSize(60);
-            buttons[i].setFontColor(Color.white);
+            buttons[i].setFont(d);
+            buttons[i].setFontColor(Color.black);
             myApp.add(buttons[i]);
 
             //sets button location based upon i value
@@ -411,16 +470,34 @@ public class Hora {
 
     }
 
+    //creates back button
+    public static void backButton() {
+        BackButton back = new BackButton();
+
+        //creates font
+        Font c = new Font("Orkney", Font.PLAIN, 20);
+
+        //sets up and places back button
+        back.setText("Back");
+        back.setFont(c);
+        back.setFontColor(Color.black);
+        back.setSize(myApp.getWidth()/20, myApp.getHeight()/25);
+        myApp.add(back).setLocation(12, myApp.getHeight()-back.getHeight()-back.getHeight()/4);
+    }
+
     //creates quit button
     public static void quitButton() {
 
         //object creation
         QuitButton quit = new QuitButton();
 
+        //creates font
+        Font c = new Font("Orkney", Font.PLAIN, 20);
+
         //sets up and places quit button
         quit.setText("Quit");
-        quit.setFontSize(30);
-        quit.setFontColor(Color.white);
+        quit.setFont(c);
+        quit.setFontColor(Color.black);
         quit.setSize(myApp.getWidth()/20, myApp.getHeight()/25);
         myApp.add(quit).setLocation(myApp.getWidth()-quit.getWidth()-quit.getWidth()/4, myApp.getHeight()-quit.getHeight()-quit.getHeight()/4);
 

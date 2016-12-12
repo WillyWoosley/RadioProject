@@ -49,6 +49,17 @@ public class Hora {
         myApp.setHeight(screenSize.height-taskbarHeight);
         myApp.setLocation(0, 0);
 
+        //placeholder for testing
+        try {
+            PjInternetRadio myRadio = new PjInternetRadio();
+            GvIMediaPlayer player = myRadio.getMediaPlayer();
+            player.setURI("http://stream1.evasionfm.com/Chante_France");
+        }
+
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
         //adds back button
         backButton();
 

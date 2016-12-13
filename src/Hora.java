@@ -1,4 +1,6 @@
 import com.pumaj.*;
+import com.sun.jna.NativeLibrary;
+import com.sun.xml.internal.bind.v2.runtime.RuntimeUtil;
 import org.w3c.dom.css.Rect;
 import org.w3c.dom.events.MouseEvent;
 import com.giavaneers.gui.elements.embedded.GvIMediaPlayer;
@@ -8,6 +10,7 @@ import javax.swing.*;
 import java.io.*;
 import javax.imageio.*;
 import java.awt.*;
+import java.util.Random;
 
 /**
  * Created by wdwoo on 12/1/2016.
@@ -35,9 +38,54 @@ public class Hora {
     protected static final int logoWidth = 588, logoHeight = 238;
     protected static final int miniLogoWidth = 70, miniLogoHeight = 100;
 
+    //booleans for checking which sections button is pressed
+    protected static boolean genre, emotion, situation;
+
+    //emotion station lists
+    protected  static String[] happyStations = {"http://airspectrum.cdnstream1.com:8008/1604_128", "http://uk1.internet-radio.com:8129/live", "http://airspectrum.cdnstream1.com:8018/1606_192"};
+    protected static String[] relaxedStations = {"http://www.partyviberadio.com:8000/;stream/1", "http://us2.internet-radio.com:8181/;stream", "http://airspectrum.cdnstream1.com:8116/1649_192"};
+    protected static String[] angryStations = {"http://uk1.internet-radio.com:8294/live", "http://uk5.internet-radio.com:8189/;stream"};
+    protected static String[] tiredStations = {"http://uk1.internet-radio.com:8274/;stream", "http://uk3.internet-radio.com:11168/live", "http://us3.internet-radio.com:8007/;stream"};
+    protected  static String[] excitedStations = {"http://uk5.internet-radio.com:8049/live", " http://us3.internet-radio.com:8087/;stream"};
+    protected  static String[] sadStations = {"http://us2.internet-radio.com:8443/;stream", "http://uk5.internet-radio.com:8058/live", "http://us1.internet-radio.com:8599/live"};
+
+    //array of all emotion station arrays (this may not end up being needed
+    protected static String[][] emotionStations = {happyStations, relaxedStations, angryStations, tiredStations, excitedStations, sadStations};
+
+    //genre station lists
+    protected static String[] latinStations = {};
+    protected static String[] countryStations = {};
+    protected static String[] popStations = {};
+    protected static String[] rockStations = {};
+    protected static String[] holidayStations = {};
+    protected static String[] hipHopStations = {};
+    protected static String[] classicalStations = {};
+    protected static String[] electronicStations = {};
+    protected static String[] folkStations = {};
+    protected static String[] reggaeStations = {};
+    protected static String[] jazzStations = {};
+    protected static String[] metalStations = {};
+    protected static String[] oldiesStations = {};
+    protected static String[] discoStations = {};
+    protected static String[] kpopStations = {};
+    protected static String[] hindiStations = {};
+
+    //array of all genre station arrays (may not be needed)
+    protected static String[][] genreStations = {latinStations, countryStations, popStations, rockStations, holidayStations, hipHopStations, classicalStations, electronicStations, folkStations, reggaeStations, jazzStations, metalStations, oldiesStations, discoStations, kpopStations, hindiStations};
+
+    //situation station list
+    protected static String[] partyStations = {};
+    protected static String[] gymStations = {};
+    protected static String[] roadtripStations = {};
+    protected static String[] dateStations = {};
+    protected static String[] stargazingStations = {};
+    protected static String[] beachStations = {};
+
+//array of all situation station arrays (may not be needed)
+    protected static String[][] situationStations = {partyStations, gymStations, roadtripStations, dateStations, stargazingStations, beachStations};
 
     public static void main(String[] args) {
-
+        NativeLibrary.addSearchPath(uk.co.caprica.vlcj.runtime.RuntimeUtil.getLibVlcLibraryName(), System.getProperty("user.dir") + "/lib/win/");
         //object which will allow you to get the screensize of whatever device program is running in
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int taskbarHeight = screenSize.height-GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
@@ -82,6 +130,19 @@ public class Hora {
             //
             //placeholder to confirm button is working
             System.out.println("3");
+        }
+
+        if (emotion) {
+            buildPlay(emotionStations[buttonPressed]);
+        }
+        else if (situation) {
+            buildPlay(situationStations[buttonPressed]);
+        }
+        else if (genre) {
+            buildPlay((genreStations[buttonPressed]));
+        }
+        else {
+            System.out.println("this is a placeholder");
         }
     }
 
@@ -222,7 +283,6 @@ public class Hora {
 
         //adds buttons
         for (int i=0; i<6; i++) {
-
             //creates generic button and sets text
             buttons[i] = new RectButton();
             buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/2);
@@ -257,7 +317,6 @@ public class Hora {
                 if (buttons[i].clickTracker==1) {
                     //doesn't do anything yet
                     buttonPressed=i;
-
                     //clears app
                     for (int j=0; j<6; j++) {
                         myApp.remove(buttons[j]);
@@ -382,6 +441,7 @@ public class Hora {
                 if (buttons[i].clickTracker==1) {
                     //doesn't do anything yet
                     buttonPressed=i;
+                    situation = true;
                     //clears app
                     for (int j=0; j<6; j++) {
                         myApp.remove(buttons[j]);
@@ -468,6 +528,7 @@ public class Hora {
                 if (buttons[i].clickTracker==1) {
                     //doesn't do anything yet
                     buttonPressed=i;
+                    genre = true;
                     //clears app
                     for (int j=0; j<12; j++) {
                         myApp.remove(buttons[j]);
@@ -487,11 +548,43 @@ public class Hora {
         return returned;
     }
 
-    //placeholder for way to clear function, doesn't work
-    public static void clearGUI(PjApplication myApp) {
+    public static void buildPlay(String[] stations) {
 
-        myApp.removeAll();
+        //object creation
+        RectButton next = new RectButton();
+        RectButton previous = new RectButton();
+        PjRectangle station = new PjRectangle();
+        boolean scanning = true;
+        Random r = new Random();
 
+        //this is where actual station creation will go
+        int stationID = r.nextInt(stations.length);
+        //set mediapath=stations[stationID]
+
+        //next button setup
+        next.setText("Next");
+        next.setFontSize(60);
+        next.setSize(myApp.getWidth()/6, myApp.getHeight()/12);
+        next.setLocation(myApp.getWidth()/2-next.getWidth()/2, myApp.getHeight()/2);
+        myApp.add(next);
+
+        //previous button setup
+        previous.setText("Previous");
+        previous.setSize(myApp.getWidth()/6, myApp.getHeight()/12);
+        previous.setLocation(next.getX(), next.getY()+previous.getHeight()+previous.getHeight()/4);
+        myApp.add(previous);
+
+        while (scanning) {
+            if (next.clickTracker==1) {
+                //insert changing of radio station
+            }
+            else if (previous.clickTracker==1) {
+                //insert changing of radio station
+            }
+            else {
+                PjUtils.sleep(500);
+            }
+        }
     }
 
     public static void button(PjApplication myApp, int x, int y, int width, int height, String setText) {

@@ -66,6 +66,7 @@ public class Hora {
 
         if (buttonPressed==0) {
             buildEmotion();
+            buildEmotionStations();
         }
 
         else if (buttonPressed==1) {
@@ -74,10 +75,6 @@ public class Hora {
 
         else if (buttonPressed==2) {
             buildGenre();
-        }
-
-        else if (buttonPressed==3) {
-            buildEmotionStations();
         }
 
         else {
@@ -90,47 +87,47 @@ public class Hora {
 
     public static void openingScreen() {
 
-        //shape creation
-        PjRectangle logo = new PjRectangle();
-        RectButton enter = new RectButton();
+            //shape creation
+            PjRectangle logo = new PjRectangle();
+            RectButton enter = new RectButton();
 
-        //variables
-        boolean listening = true;
-        String logoPath = "Assets/Images/Hora.png";
+            //variables
+            boolean listening = true;
+            String logoPath = "Assets/Images/Hora.png";
 
-        //sets up logo with image, size, and location
-        logo.setSize(logoWidth, logoHeight);
-        logo.setLocation(myApp.getWidth()/2-logo.getWidth()/2, myApp.getHeight()/2-logo.getHeight());
-        logo.setImage(logoPath);
-        logo.setBackground(Color.yellow);
-        myApp.add(logo);
+            //sets up logo with image, size, and location
+            logo.setSize(logoWidth, logoHeight);
+            logo.setLocation(myApp.getWidth() / 2 - logo.getWidth() / 2, myApp.getHeight() / 2 - logo.getHeight());
+            logo.setImage(logoPath);
+            logo.setBackground(Color.yellow);
+            myApp.add(logo);
 
-        //creates font
-        Font c = new Font("Orkney", Font.PLAIN, 18);
+            //creates font
+            Font c = new Font("Orkney", Font.PLAIN, 18);
 
-        //sets up enter button with text, size, and location
-        enter.setSize(logoWidth-logoWidth/10, logoHeight/5);
-        enter.setText("Listening Has Never Been Easier");
-        enter.setFont(c);
-        enter.setFontSize(28);
-        enter.setFontColor(Color.black);
-        myApp.add(enter).setLocation(logo.getX()+logoWidth/20, logo.getY()+logoHeight+logoHeight/6);
+            //sets up enter button with text, size, and location
+            enter.setSize(logoWidth - logoWidth / 10, logoHeight / 5);
+            enter.setText("Listening Has Never Been Easier");
+            enter.setFont(c);
+            enter.setFontSize(28);
+            enter.setFontColor(Color.black);
+            myApp.add(enter).setLocation(logo.getX() + logoWidth / 20, logo.getY() + logoHeight + logoHeight / 6);
 
-        //plays intro sound file
-        PjUtils.playSoundFile("Assets/Sounds/Intro_Sound.wav");
+            //plays intro sound file
+            PjUtils.playSoundFile("Assets/Sounds/Intro_Sound.wav");
 
-        //waits to execute when shape clicked; really hogs CPU for what it does, needs optimization
-        while(listening) {
-            if (enter.clickTracker==1) {
-                enter.clickTracker=0;
-                listening = false;
-                myApp.remove(enter);
-                myApp.remove(logo);
+            //waits to execute when shape clicked; really hogs CPU for what it does, needs optimization
+            while (listening) {
+                if (enter.clickTracker == 1) {
+                    enter.clickTracker = 0;
+                    listening = false;
+                    myApp.remove(enter);
+                    myApp.remove(logo);
+                }
+                PjUtils.sleep(500);
             }
-            PjUtils.sleep(500);
-        }
 
-    }
+        }
 
     public static void buildCategory() {
 
@@ -273,11 +270,52 @@ public class Hora {
     }
 
     public static void buildEmotionStations() {
-        //creating play button
+
+        //creates variables
+        boolean listening = true;
         TriButton play = new TriButton();
-        play.setLocation(myApp.getWidth()/2-play.getWidth(), myApp.getHeight()/2-play.getHeight());
+        PauseButton pause = new PauseButton();
+        Font d = new Font("Orkney", Font.PLAIN, 25);
+
+        //sets play button (we have a slight problem though: it turns into a rectangle and we need to rotate it)...
+        play.setSize(myApp.getWidth()/16, myApp.getHeight()/8);
+        play.setLocation(myApp.getWidth()/2, myApp.getHeight()/2 - play.getHeight());
         myApp.add(play);
 
+        //sets pause button (we need to actually make it do something)...
+        pause.setSize(myApp.getWidth()/16, myApp.getHeight()/8);
+        pause.setLocation((myApp.getWidth()/2)-(play.getWidth()*2), myApp.getHeight()/2 - play.getHeight());
+        myApp.add(pause);
+
+        //begins playing the radio
+        try {
+            PjInternetRadio hora = new PjInternetRadio();
+            GvIMediaPlayer player = hora.getMediaPlayer();
+            player.setURI("http://www.partyviberadio.com:8000/;stream/1");
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            //creates what it does when the button is pressed
+            while (listening) {
+                if (play.clickTracker == 1) {
+                    //doesn't do anything yet
+                    buttonPressed = 0;
+                    System.out.println("play");
+                    //sets it to play music (but it does not work)...
+                    try {
+                        PjInternetRadio hora = new PjInternetRadio();
+                        GvIMediaPlayer player = hora.getMediaPlayer();
+                        player.setURI("http://www.partyviberadio.com:8000/;stream/1");
+                    } catch (Exception a) {
+                        a.printStackTrace();
+
+                    }
+                    listening = false;
+                }
+
+            }
+
+        }
     }
 
     public static void buildSituation() {

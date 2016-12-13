@@ -3,6 +3,7 @@ import org.w3c.dom.css.Rect;
 import org.w3c.dom.events.MouseEvent;
 import com.giavaneers.gui.elements.embedded.GvIMediaPlayer;
 import com.giavaneers.gui.elements.embedded.GvVLCMediaPlayer;
+import com.giavaneers.gui.elements.embedded.GvIVLCLibrary;
 import javax.swing.*;
 import java.io.*;
 import javax.imageio.*;
@@ -49,16 +50,6 @@ public class Hora {
         myApp.setHeight(screenSize.height-taskbarHeight);
         myApp.setLocation(0, 0);
 
-        //placeholder for testing
-        try {
-            PjInternetRadio myRadio = new PjInternetRadio();
-            GvIMediaPlayer player = myRadio.getMediaPlayer();
-            player.setURI("http://stream1.evasionfm.com/Chante_France");
-        }
-
-        catch (Exception e) {
-            e.printStackTrace();
-        }
 
         //adds back button
         backButton();
@@ -83,6 +74,10 @@ public class Hora {
 
         else if (buttonPressed==2) {
             buildGenre();
+        }
+
+        else if (buttonPressed==3) {
+            buildEmotionStations();
         }
 
         else {
@@ -230,6 +225,7 @@ public class Hora {
 
         //adds buttons
         for (int i=0; i<6; i++) {
+
             //creates generic button and sets text
             buttons[i] = new RectButton();
             buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/2);
@@ -264,6 +260,7 @@ public class Hora {
                 if (buttons[i].clickTracker==1) {
                     //doesn't do anything yet
                     buttonPressed=i;
+
                     //clears app
                     for (int j=0; j<6; j++) {
                         myApp.remove(buttons[j]);
@@ -273,6 +270,14 @@ public class Hora {
                 }
             }
         }
+    }
+
+    public static void buildEmotionStations() {
+        //creating play button
+        TriButton play = new TriButton();
+        play.setLocation(myApp.getWidth()/2-play.getWidth(), myApp.getHeight()/2-play.getHeight());
+        myApp.add(play);
+
     }
 
     public static void buildSituation() {

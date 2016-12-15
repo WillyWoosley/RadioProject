@@ -1,15 +1,6 @@
 import com.pumaj.*;
 import com.sun.jna.NativeLibrary;
-import com.sun.xml.internal.bind.v2.runtime.RuntimeUtil;
-import com.sun.xml.internal.fastinfoset.util.StringArray;
-import org.w3c.dom.css.Rect;
-import org.w3c.dom.events.MouseEvent;
 import com.giavaneers.gui.elements.embedded.GvIMediaPlayer;
-import com.giavaneers.gui.elements.embedded.GvVLCMediaPlayer;
-import com.giavaneers.gui.elements.embedded.GvIVLCLibrary;
-import javax.swing.*;
-import java.io.*;
-import javax.imageio.*;
 import java.awt.*;
 import java.util.Random;
 
@@ -26,8 +17,6 @@ import java.util.Random;
 //
 //get images to put on buttons
 //
-//better colors for everything
-//
 //replace square buttons with something more visually appealing
 
 
@@ -36,12 +25,13 @@ public class Hora {
     //sets up app to be used for all of Hora
     protected static PjApplication myApp = new PjApplication();
     protected static int buttonPressed;
+    public static int stateTracker = 0;
     protected static final int logoWidth = 588, logoHeight = 238;
     protected static final int miniLogoWidth = 70, miniLogoHeight = 100;
 
     //creates media player
-    protected static PjInternetRadio myRadio = new PjInternetRadio();
-    protected static GvIMediaPlayer hora = myRadio.getMediaPlayer();
+    protected static PjInternetRadio myRadio;
+    protected static GvIMediaPlayer hora;
 
     //booleans for checking which sections button is pressed
     protected static boolean genre, emotion, situation;
@@ -90,17 +80,21 @@ public class Hora {
     protected static String[][] situationStations = {partyStations, gymStations, roadtripStations, dateStations, stargazingStations, beachStations};
 
     public static void main(String[] args) {
-        NativeLibrary.addSearchPath(uk.co.caprica.vlcj.runtime.RuntimeUtil.getLibVlcLibraryName(), System.getProperty("user.dir") + "/lib/win/");
+        NativeLibrary.addSearchPath("libvlc", System.getProperty("user.dir") + "/lib/win/");
+        myRadio = new PjInternetRadio();
+        hora = myRadio.getMediaPlayer();
         //object which will allow you to get the screensize of whatever device program is running in
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int taskbarHeight = screenSize.height-GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+        int taskbarHeight = screenSize.height - GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+
+        boolean running = true;
 
         //sets up app
-        myApp.setBackground(RGBtoHSB(1,1,20));
+        myApp.setBackground(RGBtoHSB(1, 1, 20));
         myApp.setVisible(true);
         myApp.setLayout(null);
         myApp.setWidth(screenSize.width);
-        myApp.setHeight(screenSize.height-taskbarHeight);
+        myApp.setHeight(screenSize.height - taskbarHeight);
         myApp.setLocation(0, 0);
 
 
@@ -110,46 +104,44 @@ public class Hora {
         //adds quit button
         quitButton();
 
+        while (running) {
+            if (stateTracker == 0) {
+                //generates opening screen
+                openingScreen();
+                stateTracker++;
+            }
 
-        //generates opening screen
-        openingScreen();
+            if (stateTracker == 1) {
+                //generates category selection screen
+                buildCategory();
+                stateTracker++;
+            }
 
-        //generates category selection screen
-        buildCategory();
+            if (buttonPressed == 0) {
+                buildEmotion();
+                buildEmotionStations();
+            } else if (buttonPressed == 1) {
+                buildSituation();
+                buildSituationStations();
+            } else if (buttonPressed == 2) {
+                buildGenre();
+                buildGenreStations();
+            } else {
+                //insert favorites
+                //
+                //placeholder to confirm button is working
+                System.out.println("3");
+            }
 
-        if (buttonPressed==0) {
-            buildEmotion();
-            buildEmotionStations();
-        }
-
-        else if (buttonPressed==1) {
-            buildSituation();
-            buildSituationStations();
-        }
-
-        else if (buttonPressed==2) {
-            buildGenre();
-            buildGenreStations();
-        }
-
-        else {
-            //insert favorites
-            //
-            //placeholder to confirm button is working
-            System.out.println("3");
-        }
-
-        if (emotion) {
-            buildPlay(emotionStations[buttonPressed]);
-        }
-        else if (situation) {
-            buildPlay(situationStations[buttonPressed]);
-        }
-        else if (genre) {
-            buildPlay((genreStations[buttonPressed]));
-        }
-        else {
-            System.out.println("this is a placeholder");
+            if (emotion) {
+                buildPlay(emotionStations[buttonPressed]);
+            } else if (situation) {
+                buildPlay(situationStations[buttonPressed]);
+            } else if (genre) {
+                buildPlay((genreStations[buttonPressed]));
+            } else {
+                System.out.println("this is a placeholder");
+            }
         }
     }
 
@@ -322,13 +314,13 @@ public class Hora {
         while (listening) {
             for (int i=0; i<6; i++) {
                 if (buttons[i].clickTracker==1) {
-                    //doesn't do anything yet
                     buttonPressed=i;
                     //clears app
                     for (int j=0; j<6; j++) {
                         myApp.remove(buttons[j]);
                     }
                     myApp.remove(emotionText);
+                    emotion = true;
                     listening=false;
                 }
             }
@@ -418,7 +410,7 @@ public class Hora {
         for (int i=0; i<6; i++) {
             //creates generic button and sets text
             buttons[i] = new RectButton();
-            buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/2);
+            buttons[i].setSize(myApp.getWidth()/6, myApp.getHeight()/6);
             buttons[i].setText(situations[i]);
             buttons[i].setFont(d);
             buttons[i].setFontColor(Color.black);
@@ -734,9 +726,7 @@ public class Hora {
         back.setFontColor(Color.black);
         back.setSize(myApp.getWidth()/20, myApp.getHeight()/25);
         myApp.add(back).setLocation(12, myApp.getHeight()-back.getHeight()-back.getHeight()/4);
-
-        }
-
+    }
 
     //creates quit button
     public static void quitButton() {

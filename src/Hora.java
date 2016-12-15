@@ -38,18 +38,22 @@ public class Hora {
     protected static final int logoWidth = 588, logoHeight = 238;
     protected static final int miniLogoWidth = 70, miniLogoHeight = 100;
 
+    //creates media player
+    protected static PjInternetRadio myRadio = new PjInternetRadio();
+    protected static GvIMediaPlayer hora = myRadio.getMediaPlayer();
+
     //booleans for checking which sections button is pressed
     protected static boolean genre, emotion, situation;
 
     //emotion station lists
-    protected  static String[] happyStations = {"http://airspectrum.cdnstream1.com:8008/1604_128", "http://uk1.internet-radio.com:8129/live", "http://airspectrum.cdnstream1.com:8018/1606_192"};
+    protected static String[] happyStations = {"http://airspectrum.cdnstream1.com:8008/1604_128", "http://uk1.internet-radio.com:8129/live", "http://airspectrum.cdnstream1.com:8018/1606_192"};
     protected static String[] relaxedStations = {"http://www.partyviberadio.com:8000/;stream/1", "http://us2.internet-radio.com:8181/;stream", "http://airspectrum.cdnstream1.com:8116/1649_192"};
     protected static String[] angryStations = {"http://uk1.internet-radio.com:8294/live", "http://uk5.internet-radio.com:8189/;stream"};
     protected static String[] tiredStations = {"http://uk1.internet-radio.com:8274/;stream", "http://uk3.internet-radio.com:11168/live", "http://us3.internet-radio.com:8007/;stream"};
-    protected  static String[] excitedStations = {"http://uk5.internet-radio.com:8049/live", " http://us3.internet-radio.com:8087/;stream"};
-    protected  static String[] sadStations = {"http://us2.internet-radio.com:8443/;stream", "http://uk5.internet-radio.com:8058/live", "http://us1.internet-radio.com:8599/live"};
+    protected static String[] excitedStations = {"http://uk5.internet-radio.com:8049/live", " http://us3.internet-radio.com:8087/;stream"};
+    protected static String[] sadStations = {"http://us2.internet-radio.com:8443/;stream", "http://uk5.internet-radio.com:8058/live", "http://us1.internet-radio.com:8599/live"};
 
-    //array of all emotion station arrays (this may not end up being needed
+    //array of all emotion station arrays (this may not end up being needed)
     protected static String[][] emotionStations = {happyStations, relaxedStations, angryStations, tiredStations, excitedStations, sadStations};
 
     //genre station lists
@@ -332,50 +336,46 @@ public class Hora {
 
         //creates variables
         boolean listening = true;
-        TriButton play = new TriButton();
-        PauseButton pause = new PauseButton();
+        RectButton play = new RectButton();
+        RectButton pause = new PauseButton();
         Font d = new Font("Orkney", Font.PLAIN, 25);
+        Random rand = new Random();
 
-        //sets play button (we have a slight problem though: it turns into a rectangle and we need to rotate it)...
-        play.setSize(myApp.getWidth()/16, myApp.getHeight()/8);
-        play.setLocation(myApp.getWidth()/2, myApp.getHeight()/2 - play.getHeight());
+        //sets play button
+        play.setSize(myApp.getWidth() / 16, myApp.getHeight() / 8);
+        play.setText("Play");
+        play.setFont(d);
+        play.setLocation(myApp.getWidth() / 2, myApp.getHeight() / 2 - play.getHeight());
+        play.setBackground(RGBtoHSB(0, 255, 0));
         myApp.add(play);
 
         //sets pause button (we need to actually make it do something)...
-        pause.setSize(myApp.getWidth()/16, myApp.getHeight()/8);
-        pause.setLocation((myApp.getWidth()/2)-(play.getWidth()*2), myApp.getHeight()/2 - play.getHeight());
+        pause.setSize(myApp.getWidth() / 16, myApp.getHeight() / 8);
+        pause.setLocation((myApp.getWidth() / 2) - (play.getWidth() * 2), myApp.getHeight() / 2 - play.getHeight());
+        pause.setText("Pause");
+        pause.setFont(d);
         myApp.add(pause);
 
-        //begins playing the radio
+        //starts media player
+        if (buttonPressed==1){
+            System.out.println("it works");
+        }
         try {
-            PjInternetRadio hora = new PjInternetRadio();
-            GvIMediaPlayer player = hora.getMediaPlayer();
-            player.setURI("http://www.partyviberadio.com:8000/;stream/1");
+            int a = rand.nextInt(happyStations.length);
+            hora.setURI(happyStations[a]);
         } catch (Exception e) {
             e.printStackTrace();
-
-            //creates what it does when the button is pressed
-            while (listening) {
-                if (play.clickTracker == 1) {
-                    //doesn't do anything yet
-                    buttonPressed = 0;
-                    System.out.println("play");
-                    //sets it to play music (but it does not work)...
-                    try {
-                        PjInternetRadio hora = new PjInternetRadio();
-                        GvIMediaPlayer player = hora.getMediaPlayer();
-                        player.setURI("http://www.partyviberadio.com:8000/;stream/1");
-                    } catch (Exception a) {
-                        a.printStackTrace();
-
-                    }
-                    listening = false;
-                }
-
+        }
+        while (listening){
+            PjUtils.sleep(250);
+            if (pause.clickTracker==1){
+                hora.setAudioVolume(0);
+                System.out.print("it works123");
             }
-
         }
     }
+
+
 
     public static void buildSituation() {
         //variable creation
@@ -489,7 +489,7 @@ public class Hora {
 
             //adds on generic button and adds text
             buttons[i] = new RectButton();
-            buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/2);
+            buttons[i].setSize(logoWidth-logoWidth/16, logoHeight/4);
             buttons[i].setText(genres[i]);
             buttons[i].setFont(d);
             buttons[i].setFontColor(Color.black);

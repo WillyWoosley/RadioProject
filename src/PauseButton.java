@@ -1,4 +1,5 @@
 import java.awt.event.MouseEvent;
+import javax.sound.sampled.*;
 
 /**
  * Created by Christoph on 12/12/16.
@@ -15,8 +16,7 @@ public class PauseButton extends RectButton {
     }
 
     public void mouseClicked(MouseEvent e) {
-        System.out.println("pause");
-        //we need to add what it does here
+
     }
 
     public void mouseEntered(MouseEvent e) {

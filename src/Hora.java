@@ -1,6 +1,7 @@
 import com.pumaj.*;
 import com.sun.jna.NativeLibrary;
 import com.sun.xml.internal.bind.v2.runtime.RuntimeUtil;
+import com.sun.xml.internal.fastinfoset.util.StringArray;
 import org.w3c.dom.css.Rect;
 import org.w3c.dom.events.MouseEvent;
 import com.giavaneers.gui.elements.embedded.GvIMediaPlayer;
@@ -54,7 +55,7 @@ public class Hora {
     protected static String[] sadStations = {"http://us2.internet-radio.com:8443/;stream", "http://uk5.internet-radio.com:8058/live", "http://us1.internet-radio.com:8599/live"};
 
     //array of all emotion station arrays (this may not end up being needed)
-    protected static String[][] emotionStations = {happyStations, relaxedStations, angryStations, tiredStations, excitedStations, sadStations};
+    protected static String[][] emotionStations = {happyStations, sadStations, angryStations, relaxedStations, excitedStations, tiredStations};
 
     //genre station lists
     protected static String[] latinStations = {};
@@ -123,10 +124,12 @@ public class Hora {
 
         else if (buttonPressed==1) {
             buildSituation();
+            buildSituationStations();
         }
 
         else if (buttonPressed==2) {
             buildGenre();
+            buildGenreStations();
         }
 
         else {
@@ -336,41 +339,46 @@ public class Hora {
 
         //creates variables
         boolean listening = true;
-        RectButton play = new RectButton();
-        RectButton pause = new PauseButton();
+        PlayButton play = new PlayButton();
+        PauseButton pause = new PauseButton();
         Font d = new Font("Orkney", Font.PLAIN, 25);
         Random rand = new Random();
 
-        //sets play button
-        play.setSize(myApp.getWidth() / 16, myApp.getHeight() / 8);
+        //places play button
+        play.setSize(myApp.getWidth()/16, myApp.getHeight()/8);
         play.setText("Play");
         play.setFont(d);
-        play.setLocation(myApp.getWidth() / 2, myApp.getHeight() / 2 - play.getHeight());
-        play.setBackground(RGBtoHSB(0, 255, 0));
+        play.setLocation(myApp.getWidth()/2+(play.getWidth()), myApp.getHeight()/2+play.getHeight()*2);
         myApp.add(play);
 
-        //sets pause button (we need to actually make it do something)...
-        pause.setSize(myApp.getWidth() / 16, myApp.getHeight() / 8);
-        pause.setLocation((myApp.getWidth() / 2) - (play.getWidth() * 2), myApp.getHeight() / 2 - play.getHeight());
+        //places pause button
+        pause.setSize(myApp.getWidth()/16, myApp.getHeight()/8);
         pause.setText("Pause");
         pause.setFont(d);
+        pause.setLocation((myApp.getWidth()/2)-(play.getWidth()), myApp.getHeight()/2+play.getHeight()*2);
         myApp.add(pause);
 
-        //starts media player
-        if (buttonPressed==1){
-            System.out.println("it works");
+        //selects which radio array to play based off of button pressed and starts media player
+        for (int m=0; m<emotionStations.length; m++) {
+            if (buttonPressed==m) {
+                try {
+                    int a=rand.nextInt(emotionStations[m].length);
+                    hora.setURI(emotionStations[m][a]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        try {
-            int a = rand.nextInt(happyStations.length);
-            hora.setURI(happyStations[a]);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //starts media player and sets pause and play buttons
         while (listening){
-            PjUtils.sleep(250);
+            PjUtils.sleep(100);
             if (pause.clickTracker==1){
-                hora.setAudioVolume(0);
-                System.out.print("it works123");
+                hora.setMute(true);
+                pause.clickTracker=0;
+            }
+            if (play.clickTracker==1){
+                hora.setMute(false);
+                play.clickTracker=0;
             }
         }
     }
@@ -452,6 +460,54 @@ public class Hora {
             }
         }
     }
+    public static void buildSituationStations() {
+        //creates variables
+        boolean listening = true;
+        PlayButton play = new PlayButton();
+        PauseButton pause = new PauseButton();
+        Font d = new Font("Orkney", Font.PLAIN, 25);
+        Random rand = new Random();
+
+        //places play button
+        play.setSize(myApp.getWidth()/16, myApp.getHeight()/8);
+        play.setText("Play");
+        play.setFont(d);
+        play.setLocation(myApp.getWidth()/2+(play.getWidth()), myApp.getHeight()/2+play.getHeight()*2);
+        myApp.add(play);
+
+        //places pause button
+        pause.setSize(myApp.getWidth()/16, myApp.getHeight()/8);
+        pause.setText("Pause");
+        pause.setFont(d);
+        pause.setLocation((myApp.getWidth()/2)-(play.getWidth()), myApp.getHeight()/2+play.getHeight()*2);
+        myApp.add(pause);
+
+        //selects which radio array to play based off of button pressed and starts media player
+        for (int m=0; m<situationStations.length; m++) {
+            if (buttonPressed==m) {
+                try {
+                    int a=rand.nextInt(situationStations[m].length);
+                    hora.setURI(situationStations[m][a]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        //starts media player and sets pause and play buttons
+        while (listening){
+            PjUtils.sleep(100);
+            if (pause.clickTracker==1){
+                hora.setMute(true);
+                pause.clickTracker=0;
+            }
+            if (play.clickTracker==1){
+                hora.setMute(false);
+                play.clickTracker=0;
+            }
+        }
+    }
+
 
     //still needs editing so it works for genre
     public static void buildGenre() {
@@ -536,6 +592,54 @@ public class Hora {
                     myApp.remove(genreText);
                     listening=false;
                 }
+            }
+        }
+    }
+
+    public static void buildGenreStations() {
+        //creates variables
+        boolean listening = true;
+        PlayButton play = new PlayButton();
+        PauseButton pause = new PauseButton();
+        Font d = new Font("Orkney", Font.PLAIN, 25);
+        Random rand = new Random();
+
+        //places play button
+        play.setSize(myApp.getWidth()/16, myApp.getHeight()/8);
+        play.setText("Play");
+        play.setFont(d);
+        play.setLocation(myApp.getWidth()/2+(play.getWidth()), myApp.getHeight()/2+play.getHeight()*2);
+        myApp.add(play);
+
+        //places pause button
+        pause.setSize(myApp.getWidth()/16, myApp.getHeight()/8);
+        pause.setText("Pause");
+        pause.setFont(d);
+        pause.setLocation((myApp.getWidth()/2)-(play.getWidth()), myApp.getHeight()/2+play.getHeight()*2);
+        myApp.add(pause);
+
+        //selects which radio array to play based off of button pressed and starts media player
+        for (int m=0; m<genreStations.length; m++) {
+            if (buttonPressed==m) {
+                try {
+                    int a=rand.nextInt(genreStations[m].length);
+                    hora.setURI(genreStations[m][a]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        //starts media player and sets pause and play buttons
+        while (listening){
+            PjUtils.sleep(100);
+            if (pause.clickTracker==1){
+                hora.setMute(true);
+                pause.clickTracker=0;
+            }
+            if (play.clickTracker==1){
+                hora.setMute(false);
+                play.clickTracker=0;
             }
         }
     }

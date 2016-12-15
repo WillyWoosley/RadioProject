@@ -109,12 +109,12 @@ public class Hora {
         //adds quit button
         quitButton();
 
+
         //generates opening screen
         openingScreen();
 
         //generates category selection screen
         buildCategory();
-
 
         if (buttonPressed==0) {
             buildEmotion();
@@ -489,7 +489,7 @@ public class Hora {
 
             //adds on generic button and adds text
             buttons[i] = new RectButton();
-            buttons[i].setSize(logoWidth-logoWidth/16, logoHeight/4);
+            buttons[i].setSize(logoWidth-logoWidth/3, logoHeight/4);
             buttons[i].setText(genres[i]);
             buttons[i].setFont(d);
             buttons[i].setFontColor(Color.black);
@@ -630,7 +630,9 @@ public class Hora {
         back.setFontColor(Color.black);
         back.setSize(myApp.getWidth()/20, myApp.getHeight()/25);
         myApp.add(back).setLocation(12, myApp.getHeight()-back.getHeight()-back.getHeight()/4);
-    }
+
+        }
+
 
     //creates quit button
     public static void quitButton() {

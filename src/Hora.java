@@ -545,7 +545,7 @@ public class Hora {
 
             //adds on generic button and adds text
             buttons[i] = new RectButton();
-            buttons[i].setSize(logoWidth-logoWidth/3, logoHeight/4);
+            buttons[i].setSize(logoWidth-logoWidth/2, logoHeight/4);
             buttons[i].setText(genres[i]);
             buttons[i].setFont(d);
             buttons[i].setFontColor(Color.black);
@@ -557,23 +557,23 @@ public class Hora {
                     buttons[i].setLocation(myApp.getWidth()/3-buttons[i].getWidth(), myApp.getHeight()/4);
                 }
                 else {
-                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i].getHeight()+buttons[i].getHeight()/8);
+                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i].getHeight()+buttons[i].getHeight()/2);
                 }
             }
             else if (i>3 && i<=7) {
                if (i==4) {
-                    buttons[i].setLocation(buttons[0].getX()+buttons[i].getWidth()+buttons[i].getWidth()/8, buttons[0].getY());
+                    buttons[i].setLocation(buttons[1].getX()+buttons[i].getWidth()+buttons[i].getWidth()/4, buttons[0].getY());
                }
                else {
-                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i].getHeight()+buttons[i].getHeight()/8);
+                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i].getHeight()+buttons[i].getHeight()/2);
                }
             }
             else {
                 if (i==8) {
-                    buttons[i].setLocation(buttons[4].getX()+buttons[i].getWidth()+buttons[i].getWidth()/8, buttons[4].getY());
+                    buttons[i].setLocation(buttons[4].getX()+buttons[i].getWidth()+buttons[i].getWidth()/4, buttons[4].getY());
                 }
                 else {
-                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i].getHeight()+buttons[i].getHeight()/8);
+                    buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i].getHeight()+buttons[i].getHeight()/2);
                 }
             }
         }

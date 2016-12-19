@@ -97,7 +97,6 @@ public class Hora {
         myApp.setHeight(screenSize.height - taskbarHeight);
         myApp.setLocation(0, 0);
 
-        buildGenre();
 
 
         //adds back button
@@ -188,7 +187,6 @@ public class Hora {
                 }
                 PjUtils.sleep(500);
             }
-
         }
 
     public static void buildCategory() {
@@ -217,19 +215,19 @@ public class Hora {
             buttons[i].setFontColor(Color.black);
             myApp.add(buttons[i]);
             if (i==0) {
-                buttons[i].setLocation(logo.getX()+logo.getWidth()/16, logo.getY()+logo.getHeight()+buttons[i].getHeight()/2);
+                buttons[i].setLocation(myApp.getWidth()/2-buttons[i].getWidth()/2, myApp.getHeight()/4+buttons[i].getHeight()*2);
                 buttons[i].setText("Emotion");
             }
             else if (i==1) {
-                buttons[i].setLocation(logo.getX()+logo.getWidth()/16, buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/2);
+                buttons[i].setLocation(myApp.getWidth()/2-buttons[i].getWidth()/2, buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/2);
                 buttons[i].setText("Situation");
             }
             else if (i==2) {
-                buttons[i].setLocation(logo.getX()+logo.getWidth()/16, buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/2);
+                buttons[i].setLocation(myApp.getWidth()/2-buttons[i].getWidth()/2, buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/2);
                 buttons[i].setText("Genre");
             }
             else {
-                buttons[i].setLocation(logo.getX()+logo.getWidth()/16, buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/2);
+                buttons[i].setLocation(myApp.getWidth()/2-buttons[i].getWidth()/2, buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/2);
                 buttons[i].setText("Favorites");
             }
         }
@@ -335,35 +333,67 @@ public class Hora {
         boolean listening = true;
         PlayButton play = new PlayButton();
         PauseButton pause = new PauseButton();
+        PjRectangle type = new PjRectangle();
+        RectButton next = new RectButton();
+        RectButton previous = new RectButton();
         Font d = new Font("Orkney", Font.PLAIN, 25);
+        Font c = new Font("Orkney", Font.PLAIN, 95);
         Random rand = new Random();
+        int station = 0;
+        int randStation=rand.nextInt(emotionStations[station].length);
+        String[] emotions = {"Happy", "Sad", "Angry", "Relaxed", "Excited", "Tired"};
 
         //places play button
         play.setSize(myApp.getWidth()/16, myApp.getHeight()/8);
         play.setText("Play");
         play.setFont(d);
-        play.setLocation(myApp.getWidth()/2+(play.getWidth()), myApp.getHeight()/2+play.getHeight()*2);
+        play.setLocation(myApp.getWidth()/2+(play.getWidth()/2), myApp.getHeight()/2+play.getHeight()*2);
         myApp.add(play);
 
         //places pause button
         pause.setSize(myApp.getWidth()/16, myApp.getHeight()/8);
         pause.setText("Pause");
         pause.setFont(d);
-        pause.setLocation((myApp.getWidth()/2)-(play.getWidth()), myApp.getHeight()/2+play.getHeight()*2);
+        pause.setLocation((myApp.getWidth()/2)-(play.getWidth())-play.getWidth()/2, myApp.getHeight()/2+play.getHeight()*2);
         myApp.add(pause);
+
+        //places next button
+        next.setSize(myApp.getWidth()/6, myApp.getHeight()/16);
+        next.setText("Next Station");
+        next.setFont(d);
+        next.setLocation(myApp.getWidth()/2+(play.getWidth()/2), (myApp.getHeight()/2)+next.getHeight());
+        myApp.add(next);
+
+        //places previous button
+        previous.setSize(myApp.getWidth()/6, myApp.getHeight()/16);
+        previous.setText("Previous Station");
+        previous.setFont(d);
+        previous.setLocation((myApp.getWidth()/2)-previous.getWidth()-previous.getWidth()/5, (myApp.getHeight()/2)+previous.getHeight());
+        myApp.add(previous);
 
         //selects which radio array to play based off of button pressed and starts media player
         for (int m=0; m<emotionStations.length; m++) {
             if (buttonPressed==m) {
                 try {
-                    int a=rand.nextInt(emotionStations[m].length);
-                    hora.setURI(emotionStations[m][a]);
+                    hora.setURI(emotionStations[m][randStation]);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                station=m;
             }
         }
-        //starts media player and sets pause and play buttons
+
+        //adds type of station
+        type.setText(emotions[station]);
+        type.setFontColor(Color.white);
+        type.setFont(c);
+        type.setSize(myApp.getWidth()/2,myApp.getHeight()/5);
+        type.setLocation(myApp.getWidth()/2-type.getWidth()/2, myApp.getHeight()/10);
+        type.setBackground(myApp.getBackground());
+        myApp.add(type);
+
+
+        //starts media player and sets pause, play, previous and next buttons
         while (listening){
             PjUtils.sleep(100);
             if (pause.clickTracker==1){
@@ -373,6 +403,30 @@ public class Hora {
             if (play.clickTracker==1){
                 hora.setMute(false);
                 play.clickTracker=0;
+            }
+            if (next.clickTracker==1){
+                randStation += 1;
+                if (randStation>emotionStations[station].length-1){
+                    randStation = 0;
+                }
+                try {
+                    hora.setURI(emotionStations[station][randStation]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                next.clickTracker=0;
+            }
+            if (previous.clickTracker==1){
+                randStation -= 1;
+                if (randStation<0){
+                    randStation = emotionStations[station].length-1;
+                }
+                try {
+                    hora.setURI(emotionStations[station][randStation]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                previous.clickTracker=0;
             }
         }
     }
@@ -521,7 +575,7 @@ public class Hora {
         genreText.setText("Genres:");
         genreText.setFontColor(Color.white);
         genreText.setFont(c);
-        genreText.setSize(logoWidth, logoHeight/2);
+        genreText.setSize(myApp.getWidth()/3, myApp.getHeight()/5);
         genreText.setLocation(myApp.getWidth()/2-genreText.getWidth()/2, myApp.getHeight()/20);
         genreText.setBackground(myApp.getBackground());
         myApp.add(genreText);
@@ -539,7 +593,7 @@ public class Hora {
 
             //adds on generic button and adds text
             buttons[i] = new RectButton();
-            buttons[i].setSize(logoWidth-logoWidth/2, logoHeight/4);
+            buttons[i].setSize(myApp.getWidth()/6, myApp.getHeight()/8);
             buttons[i].setText(genres[i]);
             buttons[i].setFont(d);
             buttons[i].setFontColor(Color.black);
@@ -548,7 +602,7 @@ public class Hora {
             //sets button location based upon i value
             if (i<=3) {
                 if (i==0) {
-                    buttons[i].setLocation(myApp.getWidth()/3-buttons[i].getWidth(), myApp.getHeight()/4);
+                    buttons[i].setLocation(myApp.getWidth()/5, myApp.getHeight()/4);
                 }
                 else {
                     buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i].getHeight()+buttons[i].getHeight()/2);

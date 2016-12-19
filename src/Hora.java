@@ -25,6 +25,7 @@ public class Hora {
     //sets up app to be used for all of Hora
     protected static PjApplication myApp = new PjApplication();
     protected static int buttonPressed;
+    protected static RectButton back = new RectButton();
     public static int stateTracker = 0;
     protected static final int logoWidth = 588, logoHeight = 238;
     protected static final int miniLogoWidth = 70, miniLogoHeight = 100;
@@ -35,6 +36,7 @@ public class Hora {
 
     //booleans for checking which sections button is pressed
     protected static boolean genre, emotion, situation;
+    protected static boolean backHit;
 
     //emotion station lists
     protected static String[] happyStations = {"http://airspectrum.cdnstream1.com:8008/1604_128", "http://uk1.internet-radio.com:8129/live", "http://airspectrum.cdnstream1.com:8018/1606_192"};
@@ -86,6 +88,7 @@ public class Hora {
         //object which will allow you to get the screensize of whatever device program is running in
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int taskbarHeight = screenSize.height - GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+        int carryOver=10;
 
         boolean running = true;
 
@@ -98,50 +101,67 @@ public class Hora {
         myApp.setLocation(0, 0);
 
 
-
         //adds back button
         backButton();
 
         //adds quit button
         quitButton();
 
+        //plays intro sound file
+        PjUtils.playSoundFile("Assets/Sounds/Intro_Sound.wav");
+
         while (running) {
             if (stateTracker == 0) {
                 //generates opening screen
                 openingScreen();
-                stateTracker++;
+                stateTracker=1;
             }
 
             if (stateTracker == 1) {
                 //generates category selection screen
                 buildCategory();
-                stateTracker++;
+            }
+            if (stateTracker == 2) {
+                switch (buttonPressed) {
+                    case 0:
+                        buildEmotion();
+                        carryOver=0;
+                        break;
+                    case 1:
+                        buildSituation();
+                        carryOver=1;
+                        break;
+                    case 2:
+                        buildGenre();
+                        carryOver=2;
+                        break;
+                    case 3:
+
+                        //insert favorites
+                        //
+                        //placeholder to confirm button is working
+                        System.out.println("3");
+                        carryOver=3;
+                        break;
+
+                }
             }
 
-            if (buttonPressed == 0) {
-                buildEmotion();
-                buildEmotionStations();
-            } else if (buttonPressed == 1) {
-                buildSituation();
-                buildSituationStations();
-            } else if (buttonPressed == 2) {
-                buildGenre();
-                buildGenreStations();
-            } else {
-                //insert favorites
-                //
-                //placeholder to confirm button is working
-                System.out.println("3");
-            }
-
-            if (emotion) {
-                buildPlay(emotionStations[buttonPressed]);
-            } else if (situation) {
-                buildPlay(situationStations[buttonPressed]);
-            } else if (genre) {
-                buildPlay((genreStations[buttonPressed]));
-            } else {
-                System.out.println("this is a placeholder");
+            if (stateTracker==3) {
+                switch (carryOver) {
+                    case 0:
+                        buildEmotionStations();
+                        break;
+                    case 1:
+                        buildSituationStations();
+                        break;
+                    case 2:
+                        buildGenreStations();
+                        break;
+                    case 3:
+                        System.out.println("placeholder for buildFavoriteStations");
+                        break;
+                }
             }
         }
     }
@@ -174,10 +194,7 @@ public class Hora {
             enter.setFontColor(Color.black);
             myApp.add(enter).setLocation((myApp.getWidth()/2)-enter.getWidth()/2, (myApp.getHeight()/3)+enter.getHeight()*3);
 
-            //plays intro sound file
-            PjUtils.playSoundFile("Assets/Sounds/Intro_Sound.wav");
-
-            //waits to execute when shape clicked; really hogs CPU for what it does, needs optimization
+            //waits to execute when shape clicked
             while (listening) {
                 if (enter.clickTracker == 1) {
                     enter.clickTracker = 0;
@@ -235,13 +252,20 @@ public class Hora {
         //doesn't work yet, can also be made more efficient
         while (listening) {
             for (int i=0; i<4; i++) {
-                if (buttons[i].clickTracker==1) {
+                if (buttons[i].clickTracker==1 || back.clickTracker==1) {
                     buttonPressed=i;
                     //clears app
                     for (int j=0; j<4; j++) {
                         myApp.remove(buttons[j]);
                     }
                     myApp.remove(logo);
+                    stateTracker=2;
+
+                    //looks if app was cleared because of back button, if true executes back functionality
+                    if (back.clickTracker==1) {
+                        stateTracker=0;
+                        back.clickTracker=0;
+                    }
                     listening=false;
                 }
             }
@@ -313,7 +337,7 @@ public class Hora {
         //listens to see which button has been pressed
         while (listening) {
             for (int i=0; i<6; i++) {
-                if (buttons[i].clickTracker==1) {
+                if (buttons[i].clickTracker==1 || back.clickTracker==1) {
                     buttonPressed=i;
                     //clears app
                     for (int j=0; j<6; j++) {
@@ -321,6 +345,13 @@ public class Hora {
                     }
                     myApp.remove(emotionText);
                     emotion = true;
+                    stateTracker=3;
+
+                    //looks if app was cleared because of back button, if true executes back functionality
+                    if (back.clickTracker==1) {
+                        back.clickTracker=0;
+                        stateTracker=1;
+                    }
                     listening=false;
                 }
             }
@@ -376,6 +407,7 @@ public class Hora {
             if (buttonPressed==m) {
                 try {
                     hora.setURI(emotionStations[m][randStation]);
+                    hora.setMute(false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -396,6 +428,8 @@ public class Hora {
         //starts media player and sets pause, play, previous and next buttons
         while (listening){
             PjUtils.sleep(100);
+
+            //play/pause button listeners
             if (pause.clickTracker==1){
                 hora.setMute(true);
                 pause.clickTracker=0;
@@ -427,6 +461,17 @@ public class Hora {
                     e.printStackTrace();
                 }
                 previous.clickTracker=0;
+            }
+
+            //looks if app was cleared because of back button, if true executes back functionality
+            if (back.clickTracker==1) {
+                back.clickTracker=0;
+                myApp.remove(pause);
+                myApp.remove(play);
+                hora.setMute(true);
+                stateTracker=2;
+                buttonPressed=0;
+                listening=false;
             }
         }
     }
@@ -494,7 +539,7 @@ public class Hora {
         //listens to see which button has been pressed
         while (listening) {
             for (int i=0; i<6; i++) {
-                if (buttons[i].clickTracker==1) {
+                if (buttons[i].clickTracker==1 || back.clickTracker==1) {
                     //doesn't do anything yet
                     buttonPressed=i;
                     situation = true;
@@ -503,6 +548,13 @@ public class Hora {
                         myApp.remove(buttons[j]);
                     }
                     myApp.remove(situationText);
+                    stateTracker=3;
+
+                    //looks if app was cleared because of back button, if true executes back functionality
+                    if (back.clickTracker==1) {
+                        back.clickTracker=0;
+                        stateTracker=1;
+                    }
                     listening=false;
                 }
             }
@@ -536,6 +588,7 @@ public class Hora {
                 try {
                     int a=rand.nextInt(situationStations[m].length);
                     hora.setURI(situationStations[m][a]);
+                    hora.setMute(false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -629,7 +682,7 @@ public class Hora {
         //listens to see which button has been pressed
         while (listening) {
             for (int i=0; i<12; i++) {
-                if (buttons[i].clickTracker==1) {
+                if (buttons[i].clickTracker==1 || back.clickTracker==1) {
                     //doesn't do anything yet
                     buttonPressed=i;
                     genre = true;
@@ -638,6 +691,13 @@ public class Hora {
                         myApp.remove(buttons[j]);
                     }
                     myApp.remove(genreText);
+                    stateTracker=3;
+
+                    //looks if app was cleared because of back button, if true executes back functionality
+                    if (back.clickTracker==1) {
+                        back.clickTracker=0;
+                        stateTracker=1;
+                    }
                     listening=false;
                 }
             }
@@ -672,6 +732,7 @@ public class Hora {
                 try {
                     int a=rand.nextInt(genreStations[m].length);
                     hora.setURI(genreStations[m][a]);
+                    hora.setMute(false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -771,7 +832,6 @@ public class Hora {
 
     //creates back button
     public static void backButton() {
-        BackButton back = new BackButton();
 
         //creates font
         Font c = new Font("Orkney", Font.PLAIN, 20);

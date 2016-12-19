@@ -468,6 +468,9 @@ public class Hora {
                 back.clickTracker=0;
                 myApp.remove(pause);
                 myApp.remove(play);
+                myApp.remove(previous);
+                myApp.remove(next);
+                myApp.remove(type);
                 hora.setMute(true);
                 stateTracker=2;
                 buttonPressed=0;

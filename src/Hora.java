@@ -39,7 +39,7 @@ public class Hora {
     //emotion station lists
     protected static String[] happyStations = {"http://airspectrum.cdnstream1.com:8008/1604_128", "http://uk1.internet-radio.com:8129/live", "http://airspectrum.cdnstream1.com:8018/1606_192"};
     protected static String[] relaxedStations = {"http://www.partyviberadio.com:8000/;stream/1", "http://us2.internet-radio.com:8181/;stream", "http://airspectrum.cdnstream1.com:8116/1649_192"};
-    protected static String[] angryStations = {"http://uk1.internet-radio.com:8294/live", "http://uk5.internet-radio.com:8189/;stream"};
+    protected static String[] angryStations = {"http://uk1.internet-radio.com:8294/live", "http://uk5.internet-radio.com:8189/;stream", "http://us1.internet-radio.com:8533/;stream", "http://us1.internet-radio.com:8224/;"};
     protected static String[] tiredStations = {"http://uk1.internet-radio.com:8274/;stream", "http://uk3.internet-radio.com:11168/live", "http://us3.internet-radio.com:8007/;stream"};
     protected static String[] excitedStations = {"http://uk5.internet-radio.com:8049/live", " http://us3.internet-radio.com:8087/;stream"};
     protected static String[] sadStations = {"http://us2.internet-radio.com:8443/;stream", "http://uk5.internet-radio.com:8058/live", "http://us1.internet-radio.com:8599/live"};
@@ -96,6 +96,8 @@ public class Hora {
         myApp.setWidth(screenSize.width);
         myApp.setHeight(screenSize.height - taskbarHeight);
         myApp.setLocation(0, 0);
+
+        buildGenre();
 
 
         //adds back button
@@ -157,7 +159,7 @@ public class Hora {
 
             //sets up logo with image, size, and location
             logo.setSize(logoWidth, logoHeight);
-            logo.setLocation(myApp.getWidth() / 2 - logo.getWidth() / 2, myApp.getHeight() / 2 - logo.getHeight());
+            logo.setLocation(myApp.getWidth() / 2 - logo.getWidth() / 2, myApp.getHeight()/5);
             logo.setImage(logoPath);
             logo.setBackground(Color.yellow);
             myApp.add(logo);
@@ -166,12 +168,12 @@ public class Hora {
             Font c = new Font("Orkney", Font.PLAIN, 18);
 
             //sets up enter button with text, size, and location
-            enter.setSize(logoWidth - logoWidth / 10, logoHeight / 5);
+            enter.setSize(myApp.getWidth()/2 - myApp.getWidth() / 9, myApp.getHeight() / 12);
             enter.setText("Listening Has Never Been Easier");
             enter.setFont(c);
             enter.setFontSize(28);
             enter.setFontColor(Color.black);
-            myApp.add(enter).setLocation(logo.getX() + logoWidth / 20, logo.getY() + logoHeight + logoHeight / 6);
+            myApp.add(enter).setLocation((myApp.getWidth()/2)-enter.getWidth()/2, (myApp.getHeight()/3)+enter.getHeight()*3);
 
             //plays intro sound file
             PjUtils.playSoundFile("Assets/Sounds/Intro_Sound.wav");
@@ -210,7 +212,7 @@ public class Hora {
         //fills array of buttons
         for (int i=0; i<4; i++) {
             buttons[i] = new RectButton();
-            buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/4);
+            buttons[i].setSize(myApp.getWidth()/2 - myApp.getWidth() / 9, myApp.getHeight() / 12);
             buttons[i].setFont(c);
             buttons[i].setFontColor(Color.black);
             myApp.add(buttons[i]);
@@ -266,7 +268,7 @@ public class Hora {
         emotionText.setText("Emotions:");
         emotionText.setFontColor(Color.white);
         emotionText.setFont(c);
-        emotionText.setSize(logoWidth, logoHeight/2);
+        emotionText.setSize(myApp.getWidth()/2,myApp.getHeight()/5);
         emotionText.setLocation(myApp.getWidth()/2-emotionText.getWidth()/2, myApp.getHeight()/20);
         emotionText.setBackground(myApp.getBackground());
         myApp.add(emotionText);
@@ -284,11 +286,11 @@ public class Hora {
         for (int i=0; i<6; i++) {
             //creates generic button and sets text
             buttons[i] = new RectButton();
-            buttons[i].setSize(logoWidth-logoWidth/8, logoHeight/2);
+            buttons[i].setSize(myApp.getWidth()/2 - myApp.getWidth() / 9, myApp.getHeight() / 6);
             buttons[i].setText(emotions[i]);
             buttons[i].setFont(d);
             buttons[i].setFontColor(Color.black);
-            myApp.add(buttons[i]);
+
 
             //sets button location based upon i value
             if (i<=2) {
@@ -307,7 +309,7 @@ public class Hora {
                     buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i-1].getHeight()+buttons[i].getHeight()/4);
                 }
             }
-
+            myApp.add(buttons[i]);
         }
 
         //listens to see which button has been pressed

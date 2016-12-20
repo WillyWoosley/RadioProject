@@ -10,8 +10,6 @@ import java.util.Random;
 //NEEDED CHANGES/LIST OF PLACEHOLDERS
 //need to change text heights so they will change with the window size
 //
-//need to insert real logo, see how that works in regards to variable dependencies
-//
 //need to adjust app window so it fits regardless of what side the taskbar is on (series of if statements, seeing if
 //windowSize-taskbarSize==windowSize
 //
@@ -87,7 +85,7 @@ public class Hora {
         //object which will allow you to get the screensize of whatever device program is running in
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int taskbarHeight = screenSize.height - GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
-        int carryOver=10;
+        int carryOver = 10;
 
         boolean running = true;
 
@@ -106,6 +104,8 @@ public class Hora {
         //adds quit button
         quitButton();
 
+        favoriteList();
+
         //plays intro sound file
         PjUtils.playSoundFile("Assets/Sounds/Intro_Sound.wav");
 
@@ -113,7 +113,7 @@ public class Hora {
             if (stateTracker == 0) {
                 //generates opening screen
                 openingScreen();
-                stateTracker=1;
+                stateTracker = 1;
             }
 
             if (stateTracker == 1) {
@@ -124,29 +124,26 @@ public class Hora {
                 switch (buttonPressed) {
                     case 0:
                         buildEmotion();
-                        carryOver=0;
+                        carryOver = 0;
                         break;
                     case 1:
                         buildSituation();
-                        carryOver=1;
+                        carryOver = 1;
                         break;
                     case 2:
                         buildGenre();
-                        carryOver=2;
+                        carryOver = 2;
                         break;
                     case 3:
 
-                        //insert favorites
-                        //
-                        //placeholder to confirm button is working
-                        System.out.println("3");
-                        carryOver=3;
+                        buildFavorite();
+                        carryOver = 3;
                         break;
 
                 }
             }
 
-            if (stateTracker==3) {
+            if (stateTracker == 3) {
                 switch (carryOver) {
                     case 0:
                         buildEmotionStations();
@@ -167,20 +164,20 @@ public class Hora {
 
     public static void openingScreen() {
 
-            //shape creation
-            PjRectangle logo = new PjRectangle();
-            RectButton enter = new RectButton();
+        //shape creation
+        PjRectangle logo = new PjRectangle();
+        RectButton enter = new RectButton();
 
-            //variables
-            boolean listening = true;
-            String logoPath = "Assets/Images/Hora.png";
+        //variables
+        boolean listening = true;
+        String logoPath = "Assets/Images/Hora.png";
 
-            //sets up logo with image, size, and location
-            logo.setSize(logoWidth, logoHeight);
-            logo.setLocation(myApp.getWidth() / 2 - logo.getWidth() / 2, myApp.getHeight()/5);
-            logo.setImage(logoPath);
-            logo.setBackground(Color.yellow);
-            myApp.add(logo);
+        //sets up logo with image, size, and location
+        logo.setSize(logoWidth, logoHeight);
+        logo.setLocation(myApp.getWidth() / 2 - logo.getWidth() / 2, myApp.getHeight() / 5);
+        logo.setImage(logoPath);
+        logo.setBackground(Color.yellow);
+        myApp.add(logo);
 
             //creates font
             Font c = new Font("Orkney", Font.PLAIN, myApp.getWidth()/45);
@@ -192,17 +189,17 @@ public class Hora {
             enter.setFontColor(Color.black);
             myApp.add(enter).setLocation((myApp.getWidth()/2)-enter.getWidth()/2, (myApp.getHeight()/3)+enter.getHeight()*3);
 
-            //waits to execute when shape clicked
-            while (listening) {
-                if (enter.clickTracker == 1) {
-                    enter.clickTracker = 0;
-                    listening = false;
-                    myApp.remove(enter);
-                    myApp.remove(logo);
-                }
-                PjUtils.sleep(500);
+        //waits to execute when shape clicked
+        while (listening) {
+            if (enter.clickTracker == 1) {
+                enter.clickTracker = 0;
+                listening = false;
+                myApp.remove(enter);
+                myApp.remove(logo);
             }
+            PjUtils.sleep(500);
         }
+    }
 
     public static void buildCategory() {
 
@@ -365,6 +362,7 @@ public class Hora {
         PjRectangle type = new PjRectangle();
         RectButton next = new RectButton();
         RectButton previous = new RectButton();
+        RectButton addFavorites = new RectButton();
         Font d = new Font("Orkney", Font.PLAIN, myApp.getWidth()/50);
         Font c = new Font("Orkney", Font.PLAIN, myApp.getWidth()/20);
         Random rand = new Random();
@@ -400,6 +398,13 @@ public class Hora {
         previous.setLocation((myApp.getWidth()/2)-previous.getWidth()-previous.getWidth()/5, (myApp.getHeight()/2)+previous.getHeight());
         myApp.add(previous);
 
+        //places addFavorites button
+        addFavorites.setSize(myApp.getWidth() / 6, myApp.getHeight() / 16);
+        addFavorites.setText("Add to Favorites");
+        addFavorites.setFont(d);
+        addFavorites.setLocation(myApp.getWidth()/2-addFavorites.getWidth()/2, myApp.getHeight()-addFavorites.getHeight()-addFavorites.getHeight()/4);
+        myApp.add(addFavorites);
+
         //selects which radio array to play based off of button pressed and starts media player
         for (int m=0; m<emotionStations.length; m++) {
             if (buttonPressed==m) {
@@ -424,7 +429,7 @@ public class Hora {
 
 
         //starts media player and sets pause, play, previous and next buttons
-        while (listening){
+        while (listening) {
             PjUtils.sleep(100);
 
             //play/pause button listeners
@@ -461,6 +466,13 @@ public class Hora {
                 previous.clickTracker=0;
             }
 
+            //looks to see if the add to favorites button has been clicked
+            if (addFavorites.clickTracker==1) {
+                ForFiles favoriteDoc = new ForFiles();
+                favoriteDoc.addURI(hora.getURI());
+                addFavorites.clickTracker=0;
+            }
+
             //looks if app was cleared because of back button, if true executes back functionality
             if (back.clickTracker==1) {
                 back.clickTracker=0;
@@ -469,6 +481,7 @@ public class Hora {
                 myApp.remove(previous);
                 myApp.remove(next);
                 myApp.remove(type);
+                myApp.remove(addFavorites);
                 hora.setMute(true);
                 stateTracker=2;
                 buttonPressed=0;
@@ -561,6 +574,7 @@ public class Hora {
             }
         }
     }
+
     public static void buildSituationStations() {
 
         //creates variables
@@ -570,6 +584,7 @@ public class Hora {
         PjRectangle type = new PjRectangle();
         RectButton next = new RectButton();
         RectButton previous = new RectButton();
+        RectButton addFavorites = new RectButton();
         Font d = new Font("Orkney", Font.PLAIN, myApp.getWidth()/50);
         Font c = new Font("Orkney", Font.PLAIN, myApp.getWidth()/20);
         Random rand = new Random();
@@ -604,6 +619,13 @@ public class Hora {
         previous.setFont(d);
         previous.setLocation((myApp.getWidth()/2)-previous.getWidth()-previous.getWidth()/5, (myApp.getHeight()/2)+previous.getHeight());
         myApp.add(previous);
+
+        //places addFavorites button
+        addFavorites.setSize(myApp.getWidth() / 6, myApp.getHeight() / 16);
+        addFavorites.setText("Add to Favorites");
+        addFavorites.setFont(d);
+        addFavorites.setLocation(myApp.getWidth()/2-addFavorites.getWidth()/2, myApp.getHeight()-addFavorites.getHeight()-addFavorites.getHeight()/4);
+        myApp.add(addFavorites);
 
         //selects which radio array to play based off of button pressed and starts media player
         for (int m=0; m<situationStations.length; m++) {
@@ -666,6 +688,13 @@ public class Hora {
                 previous.clickTracker=0;
             }
 
+            //looks to see if the add to favorites button has been clicked
+            if (addFavorites.clickTracker==1) {
+                ForFiles favoriteDoc = new ForFiles();
+                favoriteDoc.addURI(hora.getURI());
+                addFavorites.clickTracker=0;
+            }
+
             //looks if app was cleared because of back button, if true executes back functionality
             if (back.clickTracker==1) {
                 back.clickTracker=0;
@@ -674,9 +703,10 @@ public class Hora {
                 myApp.remove(previous);
                 myApp.remove(next);
                 myApp.remove(type);
+                myApp.remove(addFavorites);
                 hora.setMute(true);
                 stateTracker=2;
-                buttonPressed=0;
+                buttonPressed=1;
                 listening=false;
             }
         }
@@ -712,14 +742,13 @@ public class Hora {
         miniLogo.setImage(miniLogoPath);
         myApp.add(miniLogo);
 
-
         //adds genre buttons
         for (int i=0; i<15; i++) {
 
 
             //adds on generic button and adds text
             buttons[i] = new RectButton();
-            buttons[i].setSize(logoWidth-logoWidth/2, logoHeight/4);
+            buttons[i].setSize(myApp.getWidth() / 6, myApp.getHeight() / 8);
             buttons[i].setText(genres[i]);
             buttons[i].setFont(d);
             buttons[i].setFontColor(Color.black);
@@ -785,6 +814,7 @@ public class Hora {
         PjRectangle type = new PjRectangle();
         RectButton next = new RectButton();
         RectButton previous = new RectButton();
+        RectButton addFavorites = new RectButton();
         Font d = new Font("Orkney", Font.PLAIN, myApp.getWidth()/50);
         Font c = new Font("Orkney", Font.PLAIN, myApp.getWidth()/20);
         Random rand = new Random();
@@ -819,6 +849,13 @@ public class Hora {
         previous.setFont(d);
         previous.setLocation((myApp.getWidth()/2)-previous.getWidth()-previous.getWidth()/5, (myApp.getHeight()/2)+previous.getHeight());
         myApp.add(previous);
+
+        //places addFavorites button
+        addFavorites.setSize(myApp.getWidth() / 6, myApp.getHeight() / 16);
+        addFavorites.setText("Add to Favorites");
+        addFavorites.setFont(d);
+        addFavorites.setLocation(myApp.getWidth()/2-addFavorites.getWidth()/2, myApp.getHeight()-addFavorites.getHeight()-addFavorites.getHeight()/4);
+        myApp.add(addFavorites);
 
         //selects which radio array to play based off of button pressed and starts media player
         for (int m=0; m<genreStations.length; m++) {
@@ -881,6 +918,13 @@ public class Hora {
                 previous.clickTracker=0;
             }
 
+            //looks to see if the add to favorites button has been clicked
+            if (addFavorites.clickTracker==1) {
+                ForFiles favoriteDoc = new ForFiles();
+                favoriteDoc.addURI(hora.getURI());
+                addFavorites.clickTracker=0;
+            }
+
             //looks if app was cleared because of back button, if true executes back functionality
             if (back.clickTracker==1) {
                 back.clickTracker=0;
@@ -889,14 +933,135 @@ public class Hora {
                 myApp.remove(previous);
                 myApp.remove(next);
                 myApp.remove(type);
+                myApp.remove(addFavorites);
                 hora.setMute(true);
                 stateTracker=2;
-                buttonPressed=0;
+                buttonPressed=2;
                 listening=false;
             }
         }
     }
 
+    public static void buildFavorite() {
+
+        ForFiles favoriteGeneration = new ForFiles();
+        favoriteGeneration.initializeFavorites();
+
+        //creates variables
+        boolean listening = true;
+        PlayButton play = new PlayButton();
+        PauseButton pause = new PauseButton();
+        PjRectangle type = new PjRectangle();
+        RectButton next = new RectButton();
+        RectButton previous = new RectButton();
+        Font d = new Font("Orkney", Font.PLAIN, 25);
+        Font c = new Font("Orkney", Font.PLAIN, 95);
+        Random rand = new Random();
+        int station = 0;
+        int randStation = rand.nextInt(favoriteGeneration.stationArray().length);
+
+        //places play button
+        play.setSize(myApp.getWidth() / 16, myApp.getHeight() / 8);
+        play.setText("Play");
+        play.setFont(d);
+        play.setLocation(myApp.getWidth() / 2 + (play.getWidth() / 2), myApp.getHeight() / 2 + play.getHeight() * 2);
+        myApp.add(play);
+
+        //places pause button
+        pause.setSize(myApp.getWidth() / 16, myApp.getHeight() / 8);
+        pause.setText("Pause");
+        pause.setFont(d);
+        pause.setLocation((myApp.getWidth() / 2) - (play.getWidth()) - play.getWidth() / 2, myApp.getHeight() / 2 + play.getHeight() * 2);
+        myApp.add(pause);
+
+        //places next button
+        next.setSize(myApp.getWidth() / 6, myApp.getHeight() / 16);
+        next.setText("Next Station");
+        next.setFont(d);
+        next.setLocation(myApp.getWidth() / 2 + (play.getWidth() / 2), (myApp.getHeight() / 2) + next.getHeight());
+        myApp.add(next);
+
+        //places previous button
+        previous.setSize(myApp.getWidth() / 6, myApp.getHeight() / 16);
+        previous.setText("Previous Station");
+        previous.setFont(d);
+        previous.setLocation((myApp.getWidth() / 2) - previous.getWidth() - previous.getWidth() / 5, (myApp.getHeight() / 2) + previous.getHeight());
+        myApp.add(previous);
+
+        if (favoriteGeneration.stationsContained()==0) {
+            //placeholder for empty array conditions
+        }
+        else {
+            try {
+                int a = rand.nextInt(favoriteGeneration.stationArray().length);
+                hora.setURI(favoriteGeneration.stationArray()[a]);
+                hora.setMute(false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        while (listening) {
+            PjUtils.sleep(100);
+
+            //play/pause button listeners
+            if (pause.clickTracker == 1) {
+                hora.setMute(true);
+                pause.clickTracker = 0;
+            }
+            if (play.clickTracker == 1) {
+                hora.setMute(false);
+                play.clickTracker = 0;
+            }
+            if (next.clickTracker == 1) {
+                randStation += 1;
+                if (randStation > emotionStations[station].length - 1) {
+                    randStation = 0;
+                }
+                try {
+                    hora.setURI(emotionStations[station][randStation]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                next.clickTracker = 0;
+            }
+            if (previous.clickTracker == 1) {
+                randStation -= 1;
+                if (randStation < 0) {
+                    randStation = emotionStations[station].length - 1;
+                }
+                try {
+                    hora.setURI(emotionStations[station][randStation]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                previous.clickTracker = 0;
+            }
+
+            //looks if app was cleared because of back button, if true executes back functionality
+            if (back.clickTracker == 1) {
+                back.clickTracker = 0;
+                myApp.remove(pause);
+                myApp.remove(play);
+                myApp.remove(previous);
+                myApp.remove(next);
+                myApp.remove(type);
+                hora.setMute(true);
+                stateTracker = 1;
+                buttonPressed = 0;
+                listening = false;
+            }
+        }
+
+    }
+
+    public static void favoriteList() {
+        //reads the existing favorties list from .txt file and adds them to a String[] to be read by builder
+        String[] favoritesStations = new String[10];
+        ForFiles favoritesText = new ForFiles();
+
+        favoritesText.initializeFavorites();
+    }
 
     //streamlined way to take RGB colors and make them HSB
     public static Color RGBtoHSB(int r, int g, int b) {
@@ -904,75 +1069,6 @@ public class Hora {
         Color.RGBtoHSB(r, g, b, HSB);
         Color returned = Color.getHSBColor(HSB[0], HSB[1], HSB[2]);
         return returned;
-    }
-
-    public static void buildPlay(String[] stations) {
-
-        //object creation
-        RectButton next = new RectButton();
-        RectButton previous = new RectButton();
-        PjRectangle station = new PjRectangle();
-        boolean scanning = true;
-        Random r = new Random();
-
-        //this is where actual station creation will go
-        int stationID = r.nextInt(stations.length);
-        //set mediapath=stations[stationID]
-
-        //next button setup
-        next.setText("Next");
-        next.setFontSize(60);
-        next.setSize(myApp.getWidth()/6, myApp.getHeight()/12);
-        next.setLocation(myApp.getWidth()/2-next.getWidth()/2, myApp.getHeight()/2);
-        myApp.add(next);
-
-        //previous button setup
-        previous.setText("Previous");
-        previous.setSize(myApp.getWidth()/6, myApp.getHeight()/12);
-        previous.setLocation(next.getX(), next.getY()+previous.getHeight()+previous.getHeight()/4);
-        myApp.add(previous);
-
-        while (scanning) {
-            if (next.clickTracker==1) {
-                //insert changing of radio station
-            }
-            else if (previous.clickTracker==1) {
-                //insert changing of radio station
-            }
-            else {
-                PjUtils.sleep(500);
-            }
-        }
-    }
-
-    public static void button(PjApplication myApp, int x, int y, int width, int height, String setText) {
-        //need something that will adjust oval size as center varies
-        //need it to actually have a border
-        //need real colors rather than placeholders
-        RectButton center = new RectButton();
-        RectButton centerBorder = new RectButton();
-        PjOval right = new PjOval();
-        PjOval rightBorder = new PjOval();
-        PjOval left = new PjOval();
-        PjOval leftBorder = new PjOval();
-
-        center.setLocation(x, y);
-        center.setText(setText);
-        center.setFontSize(center.getWidth()/4);
-        center.setSize(width, height);
-
-        centerBorder.setSize(width+width/20, height+height/20);
-        centerBorder.setLocation(x-width/40, y-height/40);
-        centerBorder.setBackground(Color.cyan);
-
-        left.setLocation(center.getX()-left.getWidth()/2, center.getY());
-        right.setLocation(center.getX()+center.getWidth()-right.getWidth()/2, center.getY());
-
-        myApp.add(center);
-        myApp.add(left);
-        myApp.add(right);
-        myApp.add(centerBorder);
-
     }
 
     //creates back button

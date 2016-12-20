@@ -402,7 +402,7 @@ public class Hora {
         addFavorites.setSize(myApp.getWidth() / 6, myApp.getHeight() / 16);
         addFavorites.setText("Add to Favorites");
         addFavorites.setFont(d);
-        addFavorites.setLocation(myApp.getWidth()/2-addFavorites.getWidth()/2, myApp.getHeight()-addFavorites.getHeight()-addFavorites.getHeight()/4);
+        addFavorites.setLocation(myApp.getWidth()-addFavorites.getWidth()-addFavorites.getHeight()/2, addFavorites.getHeight()/2);
         myApp.add(addFavorites);
 
         //selects which radio array to play based off of button pressed and starts media player
@@ -624,7 +624,7 @@ public class Hora {
         addFavorites.setSize(myApp.getWidth() / 6, myApp.getHeight() / 16);
         addFavorites.setText("Add to Favorites");
         addFavorites.setFont(d);
-        addFavorites.setLocation(myApp.getWidth()/2-addFavorites.getWidth()/2, myApp.getHeight()-addFavorites.getHeight()-addFavorites.getHeight()/4);
+        addFavorites.setLocation(myApp.getWidth()-addFavorites.getWidth()-addFavorites.getHeight()/2, addFavorites.getHeight()/2);
         myApp.add(addFavorites);
 
         //selects which radio array to play based off of button pressed and starts media player
@@ -854,7 +854,7 @@ public class Hora {
         addFavorites.setSize(myApp.getWidth() / 6, myApp.getHeight() / 16);
         addFavorites.setText("Add to Favorites");
         addFavorites.setFont(d);
-        addFavorites.setLocation(myApp.getWidth()/2-addFavorites.getWidth()/2, myApp.getHeight()-addFavorites.getHeight()-addFavorites.getHeight()/4);
+        addFavorites.setLocation(myApp.getWidth()-addFavorites.getWidth()-addFavorites.getHeight()/2, addFavorites.getHeight()/2);
         myApp.add(addFavorites);
 
         //selects which radio array to play based off of button pressed and starts media player

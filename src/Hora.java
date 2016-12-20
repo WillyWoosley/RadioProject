@@ -367,7 +367,6 @@ public class Hora {
         Font c = new Font("Orkney", Font.PLAIN, myApp.getWidth()/20);
         Random rand = new Random();
         int station = 0;
-        int randStation=rand.nextInt(emotionStations[station].length);
         String[] emotions = {"Happy", "Sad", "Angry", "Relaxed", "Excited", "Tired"};
 
         //places play button
@@ -408,14 +407,19 @@ public class Hora {
         //selects which radio array to play based off of button pressed and starts media player
         for (int m=0; m<emotionStations.length; m++) {
             if (buttonPressed==m) {
-                try {
-                    hora.setURI(emotionStations[m][randStation]);
-                    hora.setMute(false);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 station=m;
             }
+        }
+
+        //creates randStation
+        int randStation=rand.nextInt(emotionStations[station].length);
+
+        //gets radio playing random station
+        try {
+            hora.setURI(emotionStations[station][randStation]);
+            hora.setMute(false);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         //adds type of station
@@ -589,7 +593,6 @@ public class Hora {
         Font c = new Font("Orkney", Font.PLAIN, myApp.getWidth()/20);
         Random rand = new Random();
         int station = 0;
-        int randStation=rand.nextInt(emotionStations[station].length);
         String[] situations = {"Party", "Gym", "Roadtrip", "Date", "Stargazing", "Beach"};
 
         //places play button
@@ -630,16 +633,20 @@ public class Hora {
         //selects which radio array to play based off of button pressed and starts media player
         for (int m=0; m<situationStations.length; m++) {
             if (buttonPressed==m) {
-                try {
-                    hora.setURI(situationStations[m][randStation]);
-                    hora.setMute(false);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 station=m;
             }
         }
 
+        //creates randStation
+        int randStation=rand.nextInt(situationStations[station].length);
+
+        //gets radio playing random station
+        try {
+            hora.setURI(situationStations[station][randStation]);
+            hora.setMute(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //adds type of station
         type.setText(situations[station]);
@@ -748,7 +755,7 @@ public class Hora {
 
             //adds on generic button and adds text
             buttons[i] = new RectButton();
-            buttons[i].setSize(myApp.getWidth() / 6, myApp.getHeight() / 8);
+            buttons[i].setSize(myApp.getWidth() / 6, myApp.getHeight() / 10);
             buttons[i].setText(genres[i]);
             buttons[i].setFont(d);
             buttons[i].setFontColor(Color.black);
@@ -757,7 +764,7 @@ public class Hora {
             //sets button location based upon i value
             if (i<=4) {
                 if (i==0) {
-                    buttons[i].setLocation(myApp.getWidth()/3-buttons[i].getWidth(), myApp.getHeight()/4);
+                    buttons[i].setLocation(myApp.getWidth()/3-buttons[i].getWidth()/2-buttons[i].getWidth()/4, myApp.getHeight()/4);
                 }
                 else {
                     buttons[i].setLocation(buttons[i-1].getX(), buttons[i-1].getY()+buttons[i].getHeight()+buttons[i].getHeight()/2);
@@ -819,7 +826,6 @@ public class Hora {
         Font c = new Font("Orkney", Font.PLAIN, myApp.getWidth()/20);
         Random rand = new Random();
         int station = 0;
-        int randStation = rand.nextInt(genreStations[station].length);
         String[] genres = {"Latin", "Country", "Pop", "Rock", "Holiday", "Hip Hop", "Classical", "Electronic", "Folk", "Reggae", "Jazz", "Metal", "Oldies", "Disco", "Hindi"};
 
         //places play button
@@ -860,16 +866,20 @@ public class Hora {
         //selects which radio array to play based off of button pressed and starts media player
         for (int m=0; m<genreStations.length; m++) {
             if (buttonPressed==m) {
-                try {
-                    hora.setURI(genreStations[m][randStation]);
-                    hora.setMute(false);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 station=m;
             }
         }
 
+        //creates randStation
+        int randStation=rand.nextInt(genreStations[station].length);
+
+        //gets radio playing random station
+        try {
+            hora.setURI(genreStations[station][randStation]);
+            hora.setMute(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //adds type of station
         type.setText(genres[station]);

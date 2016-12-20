@@ -690,7 +690,7 @@ public class Hora {
         PjRectangle genreText = new PjRectangle();
         RectButton[] buttons = new RectButton[15];
         boolean listening = true;
-        String[] genres = {"Latin", "Rock", "Classical", "Reggae", "Holiday", "Electronic", "Jazz", "Country", "Pop", "Hip Hop", "Folk", "Metal", "Oldies", "Disco", "Hindi"};
+        String[] genres = {"Latin", "Country", "Pop", "Rock", "Holiday", "Hip Hop", "Classical", "Electronic", "Folk", "Reggae", "Jazz", "Metal", "Oldies", "Disco", "Hindi"};
 
         //creates font
         Font c = new Font("Orkney", Font.PLAIN, myApp.getWidth()/15);
@@ -790,7 +790,7 @@ public class Hora {
         Random rand = new Random();
         int station = 0;
         int randStation = rand.nextInt(genreStations[station].length);
-        String[] genres = {"Latin", "Rock", "Classical", "Reggae", "Holiday", "Electronic", "Jazz", "Country", "Pop", "Hip Hop", "Folk", "Metal", "Oldies", "Disco", "Hindi"};
+        String[] genres = {"Latin", "Country", "Pop", "Rock", "Holiday", "Hip Hop", "Classical", "Electronic", "Folk", "Reggae", "Jazz", "Metal", "Oldies", "Disco", "Hindi"};
 
         //places play button
         play.setSize(myApp.getWidth()/16, myApp.getHeight()/8);
